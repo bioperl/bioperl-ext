@@ -1,0 +1,24 @@
+
+ This is the directory for the Bioperl C compiled Extensions.
+The main author for this is Ewan Birney <birney@sanger.ac.uk>
+
+ To install...
+
+ cd into Bio/Ext/Align
+ go perl Makefile.PL
+ make
+ make test (should print out alignment on STDERR)
+ make install (probably need root permissions).
+
+
+Although these extensions can be called by themselves, they
+really need the main bioperl distribution to drive them. The
+modules which do this are 
+
+   Bio::Tools::pSW - makes smith waterman alignments
+   Bio::SearchDist - deals with EVD fitting of extreme value distributions
+
+For more information on how to use these modules, read their own documentation
+(go perldoc Bio::Tools::pSW ...)
+
+
