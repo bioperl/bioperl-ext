@@ -3,7 +3,8 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 WriteMakefile(
     'NAME'      => 'Bio',
-    'VERSION'	=> '0.08.0',
+    'DISTNAME'  => 'bioperl-ext',
+    'VERSION'	=> '1.5.0-RC1',
     'DIR'       => [ qw( Bio/Ext/Align Bio/SeqIO/staden )],
     'dist'      => {  COMPRESS     => 'gzip -9f',
                       SUFFIX       => '.gz', 
