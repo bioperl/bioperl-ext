@@ -353,11 +353,14 @@ T_bp_sw_Translation
 TYPEMAP
 dpAlign_AlignOutput *    T_AlignOutput
 dpAlign_SequenceProfile *       T_SequenceProfile
+dpAlign_ScoringMatrix * T_ScoringMatrix
 
 INPUT
 T_AlignOutput
         $var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
 T_SequenceProfile
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+T_ScoringMatrix
 	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
 
 OUTPUT
@@ -365,3 +368,5 @@ T_AlignOutput
         sv_setref_pv($arg, "Bio::Ext::Align::AlignOutput", (void*) $var);
 T_SequenceProfile
 	sv_setref_pv($arg, "Bio::Ext::Align::SequenceProfile", (void*) $var);
+T_ScoringMatrix
+	sv_setref_pv($arg, "Bio::Ext::Align::ScoringMatrix", (void*) $var);

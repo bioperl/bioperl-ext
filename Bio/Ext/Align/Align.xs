@@ -3337,7 +3337,7 @@ dpAlign_AlignOutput *
 Align_Protein_Sequences(seq1, seq2, matrix, alg)
         char * seq1
         char * seq2
-        char * matrix
+        dpAlign_ScoringMatrix * matrix
 	int alg
         CODE:
         switch (alg) {
@@ -3374,6 +3374,41 @@ Score_Protein_Sequences(sp, seq2)
         sv_setiv(ST(0), (IV)RETVAL);
         XSRETURN(1);
 
+MODULE = Bio::Ext::Align PACKAGE = Bio::Ext::Align::ScoringMatrix
+
+dpAlign_ScoringMatrix *
+new(class, alphabet, gap, ext)
+        char * class
+        char * alphabet
+        int gap
+        int ext
+        PPCODE:
+        dpAlign_ScoringMatrix * out;
+        out = new_dpAlign_ScoringMatrix(alphabet, gap, ext);
+        ST(0) = sv_newmortal();
+        sv_setref_pv(ST(0), class, (void *) out);
+        XSRETURN(1);
+
+void
+set_entry(class, matrix, row, col, val)
+        char * class
+        dpAlign_ScoringMatrix * matrix
+        char * row
+        char * col
+        int val
+        PPCODE:
+        set_dpAlign_ScoringMatrix(matrix, row, col, val);
+        XSRETURN(1);
+
+void
+DESTROY(obj)
+        dpAlign_ScoringMatrix * obj
+        PPCODE:
+        int i;
+        for (i = 0; i < obj->sz; ++i)
+            free(obj->s[i]);
+        free(obj->s);
+
 MODULE = Bio::Ext::Align PACKAGE = Bio::Ext::Align::SequenceProfile
 
 dpAlign_SequenceProfile *
@@ -3395,7 +3430,7 @@ dpAlign_SequenceProfile *
 protein_new(class, seq1, matrix)
         char * class
         char * seq1
-        char * matrix
+        dpAlign_ScoringMatrix * matrix
         PPCODE:
         dpAlign_SequenceProfile * out;
         out = dpAlign_Protein_Profile(seq1, matrix);

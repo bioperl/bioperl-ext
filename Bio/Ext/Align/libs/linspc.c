@@ -87,6 +87,12 @@ dpAlign_Local_DNA_MillerMyers(char * seq1, char * seq2, int match, int mismatch,
 
 /* align the subsequences bounded by the end points */
     as->score = align(as->s1 + as->start1 - 1, as->s2 + as->start2 - 1, as->end1 - as->start1 + 1, as->end2 - as->start2 + 1, as->s, as->gap, as->ext, as->FF, as->RR, as->spc1, as->spc2);
+/*
+    for (i = 0; i < 17; ++i) {
+       free(as->s[i]);
+    }
+    free(as->s);
+*/
     return traceback(as);
 }
 
@@ -148,17 +154,62 @@ dpAlign_Global_DNA_MillerMyers(char * seq1, char * seq2, int match, int mismatch
 	dpAlign_fatal("Can't allocate memory for spaces array for seq 2!\n");
 /* align the subsequences bounded by the end points */
     as->score = align(as->s1, as->s2, as->len1, as->len2, as->s, as->gap, as->ext, as->FF, as->RR, as->spc1, as->spc2);
-
+/*
+    for (i = 0; i < 17; ++i) {
+       free(as->s[i]);
+    }
+    free(as->s);
+*/
 /* set start and end for global alignment */
     as->start1 = 1;
     as->end1 = as->len1;
     as->start2 = 1;
     as->end2 = as->len2;
+    return traceback(as);
+}
 
-    if (as->score <= 0)
-	return NULL;
-    else 
-	return traceback(as);
+/*
+    new_dpAlign_ScoringMatrix instantiate a dpAlign_ScoringMatrix object
+    with a alphabet string, gap opening penalty and gap extension penalty.
+    The dpAlign_ScoringMatrix object created will have alphabet mapping
+    array, gap penalities initialized. Memory will be allocated for the
+    scoring matrix s and initialized to zeros.
+ */
+dpAlign_ScoringMatrix *
+new_dpAlign_ScoringMatrix(char * alphabet, int gap, int ext)
+{
+    int i;
+    dpAlign_ScoringMatrix * matrix;
+
+    matrix = (dpAlign_ScoringMatrix *) malloc(sizeof(dpAlign_ScoringMatrix));
+    if (matrix == NULL)
+        dpAlign_fatal("Can't allocate memory for dpAlign_ScoringMatrix!\n");
+    matrix->sz = strlen(alphabet);
+    matrix->s = (int **) malloc(matrix->sz*sizeof(int *));
+    if (matrix->s == NULL)
+        dpAlign_fatal("Can't allocate memory for dpAlign_ScoringMatrix's s!\n");
+    for (i = 0; i < matrix->sz; ++i) {
+        matrix->s[i] = (int *) calloc(matrix->sz, sizeof(int));
+        if (matrix->s[i] == NULL) 
+            dpAlign_fatal("Can't allocate memory for dpAlign_ScoringMatrix's s!\n");
+    }
+    matrix->gap = gap;
+    matrix->ext = ext;
+    for (i = 0; i < matrix->sz; ++i) 
+         matrix->a[alphabet[i]] = i;
+    return matrix;
+}
+
+/*
+    set_dpAlign_ScoringMatrix initilizes the scoring matrix s of a
+    dpAlign_ScoringMatrix object. It only intializes one cell. Therefore
+    to use this function, you need to wrap it with two loops over the 
+    alphabet set to initialize all the fields.
+ */
+void
+set_dpAlign_ScoringMatrix(dpAlign_ScoringMatrix * matrix, char * row, char * col, int val)
+{
+   matrix->s[matrix->a[row[0]]][matrix->a[col[0]]] = val;
 }
 
 /* 
@@ -166,10 +217,13 @@ dpAlign_Global_DNA_MillerMyers(char * seq1, char * seq2, int match, int mismatch
     sequence.
  */
 dpAlign_SequenceProfile *
-dpAlign_Protein_Profile(char * seq1, char * matrix)
+dpAlign_Protein_Profile(char * seq1, dpAlign_ScoringMatrix * matrix)
 {
     int i, j;
     unsigned char * s1;
+    int gap = 7;
+    int ext = 1;
+    int sz = 24;
     int * smp; /* scoring matrix pointer */
     int * pwaa;
     dpAlign_SequenceProfile * sp;
@@ -183,21 +237,48 @@ dpAlign_Protein_Profile(char * seq1, char * matrix)
     s1 = (unsigned char *) malloc(sp->len*sizeof(unsigned char));
     if (s1 == NULL)
         dpAlign_fatal("Cannot allocate memory for encoded sequence 1!\n");
+    if (matrix == NULL) {
+        sp->a['A'] = 0x00; sp->a['R'] = 0x01; sp->a['N'] = 0x02; sp->a['D'] = 0x03;
+        sp->a['C'] = 0x04; sp->a['Q'] = 0x05; sp->a['E'] = 0x06; sp->a['G'] = 0x07;
+        sp->a['H'] = 0x08; sp->a['I'] = 0x09; sp->a['L'] = 0x0a; sp->a['K'] = 0x0b;
+        sp->a['M'] = 0x0c; sp->a['F'] = 0x0d; sp->a['P'] = 0x0e; sp->a['S'] = 0x0f;
+        sp->a['T'] = 0x10; sp->a['W'] = 0x11; sp->a['Y'] = 0x12; sp->a['V'] = 0x13;
+        sp->a['B'] = 0x14; sp->a['Z'] = 0x15; sp->a['X'] = 0x16; sp->a['*'] = 0x17;
+    }
+    else {
+       gap = matrix->gap;
+       ext = matrix->ext;
+       sz = matrix->sz;
+       for (i = 0; i < 256; ++i)
+           sp->a[i] = matrix->a[i];
+    }
     for (i = 0; i < sp->len; ++i) {
 	if (seq1[i] >= 'a' && seq1[i] <= 'z') seq1[i] -= 0x20;
-        s1[i] = prot_encode(seq1[i]);
+        s1[i] = sp->a[seq1[i]];
     }
-    sp->waa = (int *) malloc(sizeof(int)*24*sp->len);
+
+    sp->waa = (int *) malloc(sizeof(int)*sz*sp->len);
     if (sp->waa == NULL)
         dpAlign_fatal("Can't allocate memory for waa!\n");
     pwaa = sp->waa;
-    for (i = 0; i < 24; ++i) {
-        smp = blosum62[i];
-        for (j = 0; j < sp->len; ++j)
-            *pwaa++ = smp[s1[j]];
+    if (matrix == NULL) {
+        for (i = 0; i < sz; ++i) {
+            smp = blosum62[i];
+            for (j = 0; j < sp->len; ++j)
+                *pwaa++ = smp[s1[j]];
+        }
     }
-    sp->gap = 7;
-    sp->ext = 1;
+    else {
+        for (i = 0; i < sz; ++i) {
+            smp = matrix->s[i];
+            for (j = 0; j < sp->len; ++j) {
+//printf("hi1\t%d\t%d\t%d\t%d\n", i, j, s1[j], smp[s1[j]]);
+                *pwaa++ = smp[s1[j]];
+}
+        }
+    }
+    sp->gap = gap;
+    sp->ext = ext;
     sp->type = 2;
     free(s1);
     return sp;
@@ -227,7 +308,7 @@ dpAlign_Local_Protein_PhilGreen(dpAlign_SequenceProfile * sp, char * seq2)
 
     for (i = 0; i < N; ++i) {
 	if (seq2[i] >= 'a' && seq2[i] <= 'z') seq2[i] -= 0x20;
-        s2[i] = prot_encode(seq2[i]);
+        s2[i] = sp->a[seq2[i]];
     }
 
     ss = (struct swstr *) malloc(sizeof(struct swstr)*(sp->len+1));
@@ -278,7 +359,7 @@ dpAlign_DNA_Profile(char * seq1, int match, int mismatch, int gap, int ext)
 }
 
 /* 
-    dpAlign_Local_Protein_PhilGreen compares a DNA sequence profile
+    dpAlign_Local_DNA_PhilGreen compares a DNA sequence profile
     with a DNA sequence and return the optimal local alignment score.
  */
 int
@@ -322,10 +403,14 @@ dpAlign_Local_DNA_PhilGreen(dpAlign_SequenceProfile * sp, char * seq2)
   structure that can be easily converted into a Bio::SimpleAlign object.
  */
 dpAlign_AlignOutput *
-dpAlign_Local_Protein_MillerMyers(char * seq1, char * seq2, char * matrix)
+dpAlign_Local_Protein_MillerMyers(char * seq1, char * seq2, dpAlign_ScoringMatrix * matrix)
 {
     sw_AlignStruct * as;
     int ** s;
+    int * a; /* alphabet array */
+    int gap = 7;
+    int ext = 1;
+    int sz = 24; /* size of alphabet */
     int i, j;
 
     if (seq1 == NULL)
@@ -334,36 +419,64 @@ dpAlign_Local_Protein_MillerMyers(char * seq1, char * seq2, char * matrix)
 	dpAlign_fatal("Sequence 2 is a NULL pointer!\n");
 
 /* initialize the scoring matrix */
-    s = (int **) malloc(24*sizeof(int *));
+    if (matrix == NULL) {
+    s = (int **) malloc(sz*sizeof(int *));
     if (s == NULL)
         dpAlign_fatal("Cannot allocate memory for scoring matrix row!\n");
-    for (i = 0; i < 24; ++i) {
+    for (i = 0; i < sz; ++i) {
 	s[i] = (int *) malloc(24*sizeof(int));
 	if (s[i] == NULL)
 	    dpAlign_fatal("Cannot allocate memory for scoring matrix col!\n");
-        for (j = 0; j < 24; ++j) {
+        for (j = 0; j < sz; ++j) {
 	    s[i][j] = blosum62[i][j];
         }
     }
+        a = (int *) malloc(256*sizeof(int));
+        if (a == NULL)
+            dpAlign_fatal("Cannot allocate memory for protein encoding array!\n");
+
+        a['A'] = 0x00; a['R'] = 0x01; a['N'] = 0x02; a['D'] = 0x03;
+        a['C'] = 0x04; a['Q'] = 0x05; a['E'] = 0x06; a['G'] = 0x07;
+        a['H'] = 0x08; a['I'] = 0x09; a['L'] = 0x0a; a['K'] = 0x0b;
+        a['M'] = 0x0c; a['F'] = 0x0d; a['P'] = 0x0e; a['S'] = 0x0f;
+        a['T'] = 0x10; a['W'] = 0x11; a['Y'] = 0x12; a['V'] = 0x13;
+        a['B'] = 0x14; a['Z'] = 0x15; a['X'] = 0x16; a['*'] = 0x17;
+    }
+    else {
+       a = matrix->a;
+       s = matrix->s;
+       gap = matrix->gap;
+       ext = matrix->ext;
+       sz = matrix->sz;
+    }
 
 /* initialize alignment data structure */
-    as = init_AlignStruct(seq1, seq2, s, 7, 1);
+    as = init_AlignStruct(seq1, seq2, s, gap, ext);
 
 /* uppercase the sequence and encode it */
     for (i = 0; i < as->len1; ++i) {
 	if (as->seq1[i] >= 'a' && as->seq1[i] <= 'z') as->seq1[i] -= 0x20;
-        as->s1[i] = prot_encode(as->seq1[i]);
+        as->s1[i] = a[as->seq1[i]];
     }
     for (i = 0; i < as->len2; ++i) {
 	if (as->seq2[i] >= 'a' && as->seq2[i] <= 'z') as->seq2[i] -= 0x20;
-        as->s2[i] = prot_encode(as->seq2[i]);
+        as->s2[i] = a[as->seq2[i]];
     }
+
+    if (matrix == NULL)
+        free(a); /* free array after encoding */
 
 /* locate the end points of the subsequence that results in the maximal score */
     find_ends(as);
 
 /* align the subsequences bounded by the end points */
     as->score = align(as->s1 + as->start1 - 1, as->s2 + as->start2 - 1, as->end1 - as->start1 + 1, as->end2 - as->start2 + 1, as->s, as->gap, as->ext, as->FF, as->RR, as->spc1, as->spc2);
+/* free scoring matrix 
+    for (i = 0; i < sz; ++i) {
+       free(as->s[i]);
+    }
+    free(as->s);
+*/
     return traceback(as);
 }
 
@@ -376,10 +489,14 @@ dpAlign_Local_Protein_MillerMyers(char * seq1, char * seq2, char * matrix)
   structure that can be easily converted into a Bio::SimpleAlign object.
  */
 dpAlign_AlignOutput *
-dpAlign_Global_Protein_MillerMyers(char * seq1, char * seq2, char * matrix)
+dpAlign_Global_Protein_MillerMyers(char * seq1, char * seq2, dpAlign_ScoringMatrix * matrix)
 {
     sw_AlignStruct * as;
     int ** s;
+    int * a; /* alphabet array */
+    int gap = 7;
+    int ext = 1;
+    int sz = 24; /* size of alphabet */
     int i, j;
 
     if (seq1 == NULL)
@@ -388,30 +505,52 @@ dpAlign_Global_Protein_MillerMyers(char * seq1, char * seq2, char * matrix)
 	dpAlign_fatal("Sequence 2 is a NULL pointer!\n");
 
 /* initialize the scoring matrix */
-    s = (int **) malloc(24*sizeof(int *));
-    if (s == NULL)
-        dpAlign_fatal("Cannot allocate memory for scoring matrix row!\n");
-    for (i = 0; i < 24; ++i) {
-	s[i] = (int *) malloc(24*sizeof(int));
-	if (s[i] == NULL)
-	    dpAlign_fatal("Cannot allocate memory for scoring matrix col!\n");
-        for (j = 0; j < 24; ++j) {
-	    s[i][j] = blosum62[i][j];
+    if (matrix == NULL) {
+        s = (int **) malloc(sz*sizeof(int *));
+        if (s == NULL)
+            dpAlign_fatal("Cannot allocate memory for scoring matrix row!\n");
+        for (i = 0; i < sz; ++i) {
+	    s[i] = (int *) malloc(sz*sizeof(int));
+	    if (s[i] == NULL)
+	        dpAlign_fatal("Cannot allocate memory for scoring matrix col!\n");
+            for (j = 0; j < sz; ++j) {
+	        s[i][j] = blosum62[i][j];
+            }
         }
+        a = (int *) malloc(256*sizeof(int));
+        if (a == NULL)
+            dpAlign_fatal("Cannot allocate memory for protein encoding array!\n");
+
+        a['A'] = 0x00; a['R'] = 0x01; a['N'] = 0x02; a['D'] = 0x03;
+        a['C'] = 0x04; a['Q'] = 0x05; a['E'] = 0x06; a['G'] = 0x07;
+        a['H'] = 0x08; a['I'] = 0x09; a['L'] = 0x0a; a['K'] = 0x0b;
+        a['M'] = 0x0c; a['F'] = 0x0d; a['P'] = 0x0e; a['S'] = 0x0f;
+        a['T'] = 0x10; a['W'] = 0x11; a['Y'] = 0x12; a['V'] = 0x13;
+        a['B'] = 0x14; a['Z'] = 0x15; a['X'] = 0x16; a['*'] = 0x17;
+    }
+    else {
+       a = matrix->a;
+       s = matrix->s;
+       gap = matrix->gap;
+       ext = matrix->ext;
+       sz = matrix->sz;
     }
 
 /* initialize alignment data structure */
-    as = init_AlignStruct(seq1, seq2, s, 7, 1);
+    as = init_AlignStruct(seq1, seq2, s, gap, ext);
 
 /* uppercase the sequence and encode it */
     for (i = 0; i < as->len1; ++i) {
 	if (as->seq1[i] >= 'a' && as->seq1[i] <= 'z') as->seq1[i] -= 0x20;
-        as->s1[i] = prot_encode(as->seq1[i]);
+        as->s1[i] = a[as->seq1[i]];
     }
     for (i = 0; i < as->len2; ++i) {
 	if (as->seq2[i] >= 'a' && as->seq2[i] <= 'z') as->seq2[i] -= 0x20;
-        as->s2[i] = prot_encode(as->seq2[i]);
+        as->s2[i] = a[as->seq2[i]];
     }
+
+    if (matrix == NULL)
+        free(a); /* free array after encoding */
 
 /* initialize the spaces arrays */
     as->spc1 = (int *) calloc(as->len1 + 1, sizeof(int));
@@ -423,16 +562,20 @@ dpAlign_Global_Protein_MillerMyers(char * seq1, char * seq2, char * matrix)
 /* align the subsequences bounded by the end points */
     as->score = align(as->s1, as->s2, as->len1, as->len2, as->s, as->gap, as->ext, as->FF, as->RR, as->spc1, as->spc2);
 
+/* free scoring matrix 
+    for (i = 0; i < sz; ++i) {
+       free(as->s[i]);
+    }
+    free(as->s);
+*/
+
 /* set start and end for global alignment */
     as->start1 = 1;
     as->end1 = as->len1;
     as->start2 = 1;
     as->end2 = as->len2;
 
-    if (as->score <= 0)
-        return NULL;
-    else
-        return traceback(as);
+    return traceback(as);
 }
 
 /* 
@@ -499,9 +642,6 @@ traceback(sw_AlignStruct * as)
     int i, j, k;
 
 /* free all allocated memory before we exit this module */
-    for (i = 0; i < 4; ++i)
-	free(as->s[i]);
-    free(as->s);
     free(as->s1);
     free(as->s2);
     free(as->FF);
