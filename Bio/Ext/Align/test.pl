@@ -52,7 +52,7 @@ $alnout->write_aln($out);
 
 print "ok 3\n"; # Assume 3rd test worked
 
-$aln = &Bio::Ext::Align::Align_Protein_Sequences("WLGQRNLVSSTGGNLLNVWLKDW","WMGNRNVVNLLNVWFRDW","blosum62", Bio::Tools::dpAlign::DPALIGN_LOCAL_MILLER_MYERS);
+$aln = &Bio::Ext::Align::Align_Protein_Sequences("WLGQRNLVSSTGGNLLNVWLKDW","WMGNRNVVNLLNVWFRDW",0,Bio::Tools::dpAlign::DPALIGN_LOCAL_MILLER_MYERS);
 $out = Bio::SimpleAlign->new();
 
 $out->add_seq(Bio::LocatableSeq->new(-seq => $aln->aln1,
