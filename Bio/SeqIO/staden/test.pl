@@ -43,7 +43,7 @@ sub END {
     } @FORMATS;
 }
 
-eval { use Bio::SeqIO::staden::read; };
+eval { local $^W = 0; use Bio::SeqIO::staden::read };
 ok($@, '', $@);
 
 use Bio::SeqIO;
