@@ -1,0 +1,351 @@
+TYPEMAP
+void             T_IV
+boolean          T_IV
+aa               T_IV
+codon            T_IV
+base             T_IV
+Score            T_IV
+float            T_DOUBLE
+Probability      T_DOUBLE
+Bits             T_DOUBLE
+
+TYPEMAP
+bp_sw_AlnBlock *    T_bp_sw_AlnBlock
+
+INPUT
+T_bp_sw_AlnBlock
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_AlnBlock
+	sv_setref_pv($arg, "Bio::Ext::Align::AlnBlock", (void*) $var);
+
+TYPEMAP
+bp_sw_AlnColumn *    T_bp_sw_AlnColumn
+
+INPUT
+T_bp_sw_AlnColumn
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_AlnColumn
+	sv_setref_pv($arg, "Bio::Ext::Align::AlnColumn", (void*) $var);
+
+TYPEMAP
+bp_sw_AlnUnit *    T_bp_sw_AlnUnit
+
+INPUT
+T_bp_sw_AlnUnit
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_AlnUnit
+	sv_setref_pv($arg, "Bio::Ext::Align::AlnUnit", (void*) $var);
+
+TYPEMAP
+bp_sw_AlnSequence *    T_bp_sw_AlnSequence
+
+INPUT
+T_bp_sw_AlnSequence
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_AlnSequence
+	sv_setref_pv($arg, "Bio::Ext::Align::AlnSequence", (void*) $var);
+
+TYPEMAP
+bp_sw_AlnRangeSet *    T_bp_sw_AlnRangeSet
+
+INPUT
+T_bp_sw_AlnRangeSet
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_AlnRangeSet
+	sv_setref_pv($arg, "Bio::Ext::Align::AlnRangeSet", (void*) $var);
+
+TYPEMAP
+bp_sw_AlnRange *    T_bp_sw_AlnRange
+
+INPUT
+T_bp_sw_AlnRange
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_AlnRange
+	sv_setref_pv($arg, "Bio::Ext::Align::AlnRange", (void*) $var);
+
+TYPEMAP
+bp_sw_cDNA *    T_bp_sw_cDNA
+
+INPUT
+T_bp_sw_cDNA
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_cDNA
+	sv_setref_pv($arg, "Bio::Ext::Align::cDNA", (void*) $var);
+
+TYPEMAP
+bp_sw_cDNADB *    T_bp_sw_cDNADB
+
+INPUT
+T_bp_sw_cDNADB
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_cDNADB
+	sv_setref_pv($arg, "Bio::Ext::Align::cDNADB", (void*) $var);
+
+TYPEMAP
+bp_sw_CodonTable *    T_bp_sw_CodonTable
+
+INPUT
+T_bp_sw_CodonTable
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_CodonTable
+	sv_setref_pv($arg, "Bio::Ext::Align::CodonTable", (void*) $var);
+
+TYPEMAP
+bp_sw_CodonMapper *    T_bp_sw_CodonMapper
+
+INPUT
+T_bp_sw_CodonMapper
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_CodonMapper
+	sv_setref_pv($arg, "Bio::Ext::Align::CodonMapper", (void*) $var);
+
+TYPEMAP
+bp_sw_ComplexSequence *    T_bp_sw_ComplexSequence
+
+INPUT
+T_bp_sw_ComplexSequence
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_ComplexSequence
+	sv_setref_pv($arg, "Bio::Ext::Align::ComplexSequence", (void*) $var);
+
+TYPEMAP
+bp_sw_ComplexSequenceEvalSet *    T_bp_sw_ComplexSequenceEvalSet
+
+INPUT
+T_bp_sw_ComplexSequenceEvalSet
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_ComplexSequenceEvalSet
+	sv_setref_pv($arg, "Bio::Ext::Align::ComplexSequenceEvalSet", (void*) $var);
+
+TYPEMAP
+bp_sw_CompMat *    T_bp_sw_CompMat
+
+INPUT
+T_bp_sw_CompMat
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_CompMat
+	sv_setref_pv($arg, "Bio::Ext::Align::CompMat", (void*) $var);
+
+TYPEMAP
+bp_sw_Gene *    T_bp_sw_Gene
+
+INPUT
+T_bp_sw_Gene
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_Gene
+	sv_setref_pv($arg, "Bio::Ext::Align::Gene", (void*) $var);
+
+TYPEMAP
+bp_sw_Genomic *    T_bp_sw_Genomic
+
+INPUT
+T_bp_sw_Genomic
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_Genomic
+	sv_setref_pv($arg, "Bio::Ext::Align::Genomic", (void*) $var);
+
+TYPEMAP
+bp_sw_GenomicDB *    T_bp_sw_GenomicDB
+
+INPUT
+T_bp_sw_GenomicDB
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_GenomicDB
+	sv_setref_pv($arg, "Bio::Ext::Align::GenomicDB", (void*) $var);
+
+TYPEMAP
+bp_sw_GenomicRegion *    T_bp_sw_GenomicRegion
+
+INPUT
+T_bp_sw_GenomicRegion
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_GenomicRegion
+	sv_setref_pv($arg, "Bio::Ext::Align::GenomicRegion", (void*) $var);
+
+TYPEMAP
+bp_sw_Histogram *    T_bp_sw_Histogram
+
+INPUT
+T_bp_sw_Histogram
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_Histogram
+	sv_setref_pv($arg, "Bio::Ext::Align::Histogram", (void*) $var);
+
+TYPEMAP
+bp_sw_Hscore *    T_bp_sw_Hscore
+
+INPUT
+T_bp_sw_Hscore
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_Hscore
+	sv_setref_pv($arg, "Bio::Ext::Align::Hscore", (void*) $var);
+
+TYPEMAP
+bp_sw_DataScore *    T_bp_sw_DataScore
+
+INPUT
+T_bp_sw_DataScore
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_DataScore
+	sv_setref_pv($arg, "Bio::Ext::Align::DataScore", (void*) $var);
+
+TYPEMAP
+bp_sw_DataEntry *    T_bp_sw_DataEntry
+
+INPUT
+T_bp_sw_DataEntry
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_DataEntry
+	sv_setref_pv($arg, "Bio::Ext::Align::DataEntry", (void*) $var);
+
+TYPEMAP
+bp_sw_PackAln *    T_bp_sw_PackAln
+
+INPUT
+T_bp_sw_PackAln
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_PackAln
+	sv_setref_pv($arg, "Bio::Ext::Align::PackAln", (void*) $var);
+
+TYPEMAP
+bp_sw_PackAlnUnit *    T_bp_sw_PackAlnUnit
+
+INPUT
+T_bp_sw_PackAlnUnit
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_PackAlnUnit
+	sv_setref_pv($arg, "Bio::Ext::Align::PackAlnUnit", (void*) $var);
+
+TYPEMAP
+bp_sw_Protein *    T_bp_sw_Protein
+
+INPUT
+T_bp_sw_Protein
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_Protein
+	sv_setref_pv($arg, "Bio::Ext::Align::Protein", (void*) $var);
+
+TYPEMAP
+bp_sw_ProteinDB *    T_bp_sw_ProteinDB
+
+INPUT
+T_bp_sw_ProteinDB
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_ProteinDB
+	sv_setref_pv($arg, "Bio::Ext::Align::ProteinDB", (void*) $var);
+
+TYPEMAP
+bp_sw_Sequence *    T_bp_sw_Sequence
+
+INPUT
+T_bp_sw_Sequence
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_Sequence
+	sv_setref_pv($arg, "Bio::Ext::Align::Sequence", (void*) $var);
+
+TYPEMAP
+bp_sw_SequenceDB *    T_bp_sw_SequenceDB
+
+INPUT
+T_bp_sw_SequenceDB
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_SequenceDB
+	sv_setref_pv($arg, "Bio::Ext::Align::SequenceDB", (void*) $var);
+
+TYPEMAP
+bp_sw_FileSource *    T_bp_sw_FileSource
+
+INPUT
+T_bp_sw_FileSource
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_FileSource
+	sv_setref_pv($arg, "Bio::Ext::Align::FileSource", (void*) $var);
+
+TYPEMAP
+bp_sw_Exon *    T_bp_sw_Exon
+
+INPUT
+T_bp_sw_Exon
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_Exon
+	sv_setref_pv($arg, "Bio::Ext::Align::Exon", (void*) $var);
+
+TYPEMAP
+bp_sw_Transcript *    T_bp_sw_Transcript
+
+INPUT
+T_bp_sw_Transcript
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_Transcript
+	sv_setref_pv($arg, "Bio::Ext::Align::Transcript", (void*) $var);
+
+TYPEMAP
+bp_sw_Translation *    T_bp_sw_Translation
+
+INPUT
+T_bp_sw_Translation
+	$var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_bp_sw_Translation
+	sv_setref_pv($arg, "Bio::Ext::Align::Translation", (void*) $var);
