@@ -233,7 +233,7 @@ int staden_write_trace(SV *self, FILE *fh, int format,
 }
 
   i = fwrite_reading(fh, read, format);
-  fflush(fh);
+
   read_deallocate(read);
   return i;
 }
