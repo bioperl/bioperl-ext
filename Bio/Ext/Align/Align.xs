@@ -10,7 +10,7 @@ extern "C" {
 #endif
 
 #include "sw.h"
-
+#include "dpalign.h"
 
 static int
 not_here(s)
@@ -3307,7 +3307,86 @@ Align_Proteins_SmithWaterman(one,two,comp,gap,ext)
 	OUTPUT:
 	RETVAL
 
+MODULE = Bio::Ext::Align PACKAGE = Bio::Ext::Align
 
+dpAlign_AlignOutput *
+Align_DNA_Sequences(seq1, seq2, match, mismatch, gap, ext, alg)
+        char * seq1
+        char * seq2
+        int match
+        int mismatch
+        int gap
+        int ext
+        int alg
+        CODE:
+        switch (alg) {
+        case 1:
+            RETVAL = dpAlign_Local_DNA_MillerMyers(seq1, seq2, match, mismatch, gap, ext);
+            break;
+        default:
+            RETVAL = dpAlign_Local_DNA_MillerMyers(seq1, seq2, match, mismatch, gap, ext);
+            break;
+        }
+        OUTPUT:
+        RETVAL
 
+dpAlign_AlignOutput *
+Align_Protein_Sequences(seq1, seq2, matrix)
+        char * seq1
+        char * seq2
+        char * matrix
+        CODE:
+            RETVAL = dpAlign_Local_Protein_MillerMyers(seq1, seq2, matrix);
+        OUTPUT:
+        RETVAL
 
+MODULE = Bio::Ext::Align PACKAGE = Bio::Ext::Align::AlignOutput
+
+char *
+aln1(obj)
+        dpAlign_AlignOutput * obj
+	CODE:
+        RETVAL = obj->aln1;
+        OUTPUT:
+        RETVAL
+
+char *
+aln2(obj)
+        dpAlign_AlignOutput * obj
+        CODE:
+        RETVAL = obj->aln2;
+        OUTPUT:
+        RETVAL
+
+int
+start1(obj)
+        dpAlign_AlignOutput * obj
+        CODE:
+        RETVAL = obj->start1;
+        OUTPUT:
+        RETVAL
+
+int
+end1(obj)
+        dpAlign_AlignOutput * obj
+        CODE:
+        RETVAL = obj->end1;
+        OUTPUT:
+        RETVAL
+
+int
+start2(obj)
+        dpAlign_AlignOutput * obj
+        CODE:
+        RETVAL = obj->start2;
+        OUTPUT:
+        RETVAL
+
+int
+end2(obj)
+        dpAlign_AlignOutput * obj
+        CODE:
+        RETVAL = obj->end2;
+        OUTPUT:
+        RETVAL
 

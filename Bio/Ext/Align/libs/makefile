@@ -35,7 +35,9 @@ OBJS =	aln.o\
 	wiseoverlay.o\
 	wiserandom.o\
 	wisestring.o\
-	wisetime.o
+	wisetime.o\
+	dpalign.o\
+	linspc.o
 
 libsw.a : $(OBJS)
 	ar ru libsw.a $(OBJS)

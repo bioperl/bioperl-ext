@@ -349,3 +349,15 @@ T_bp_sw_Translation
 OUTPUT
 T_bp_sw_Translation
 	sv_setref_pv($arg, "Bio::Ext::Align::Translation", (void*) $var);
+
+TYPEMAP
+dpAlign_AlignOutput *    T_AlignOutput
+
+INPUT
+T_AlignOutput
+        $var = ($type) (SvROK($arg) == 0 ? ($type) NULL :  ($type) SvIV((SV*)SvRV($arg)))
+
+OUTPUT
+T_AlignOutput
+        sv_setref_pv($arg, "Bio::Ext::Align::AlignOutput", (void*) $var);
+

@@ -15,7 +15,7 @@ sub MY::postamble{
 '
 $(MYEXTLIB): 
 	DEFINE=\'$(DEFINE)\'; CC=\'$(PERLMAINCC)\'; export DEFINE INC CC; \
-	cd libs && $(MAKE) libsw$(LIB_EXT) -e
+	cd libs && $(MAKE) CC=$(CC) libsw$(LIB_EXT) -e
 
 ';
 }
