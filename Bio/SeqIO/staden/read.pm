@@ -149,8 +149,8 @@ sub write_trace {
 					$seq->seq,
 					$len,
 					$seq->can('qual') ? $seq->qual : [],
-					$seq->display_id,
-					$seq->desc
+					$seq->display_id || '',
+					$seq->desc || ''
 				       );
     if ($ret == -1) {
 	$self->throw( -class => 'Bio::Root::NotImplemented',
