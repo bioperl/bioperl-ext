@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'      => 'Bio',
     'VERSION'	=> '0.08.0',
-    'DIR'       => [ qw( Bio/Ext/Align Bio/SeqIO/staden )]
+    'DIR'       => [ qw( Bio/Ext/Align Bio/SeqIO/staden )],
     'dist'      => {  COMPRESS     => 'gzip -9f',
                       SUFFIX       => '.gz', 
                       DIST_DEFAULT => 'all tardist',
