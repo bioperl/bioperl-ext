@@ -189,3 +189,110 @@ align(unsigned char * A, unsigned char * B, int M, int N, int ** s, int g, int e
     }
     return midc;
 }
+
+/*
+    pgreen runs Phil Green's algorithm to calculate alignment score between
+    two sequences. The argument waa is a sequence profile derived from
+    the query sequence and the scoring matrix. The second argument M is 
+    the length of query sequence. B is the sequence to compare to. N is
+    the length of the second sequence. gap is the gap opening cost. ext
+    is the gap extension cost. ss is a preallocated array of struct swstr
+    with a size of M.
+
+    Most of the code in this function is copied from the do_work function
+    in dropgsw.c inside the FASTA distribution.
+ */
+int
+pgreen(int * waa, int M, unsigned char * B, int N, int gap, int ext, struct swstr * ss)
+{
+    int score;
+    int e, f, h, p, i, temp;
+    struct swstr * ssj;
+
+    int * pwaa;
+
+    gap = gap + ext;
+    ext = -ext;
+    ss[M].H = -1;
+    ss[M].E = 1;
+    score = 0;
+    for (h = 0; h < M; ++h) {
+	ss[h].H = ss[h].E = 0;
+    }
+
+    for (i = 0; i < N; ++i) {
+	pwaa = waa + B[i]*M;
+	ssj = ss;
+
+	e = f = h = p = 0;
+    zero_f:
+	while (1) {
+	    h = p + *pwaa++;
+	    p = ssj->H;
+	    if ((e = ssj->E) > 0) {
+		if (p == -1) goto next_row;
+		if (h < e) h = e;
+		else if (h > gap) {
+		    e += ext;
+		    goto transition;
+		}
+		e += ext;
+		ssj->E = (e > 0) ? e : 0;
+		ssj++->H = h;
+	    }
+	    else {
+		if (h > 0) {
+		    if (h > gap) {
+			e = 0;
+			goto transition;
+		    }
+		    ssj++->H = h;
+		}
+		else ssj++->H = 0;
+	    }
+	}
+
+    transition:
+	if (score < h) score = h;
+
+	temp = h - gap;
+	if (f < temp) f = temp;
+	if (e < temp) e = temp;
+	ssj->E = (e > 0) ? e : 0;
+	ssj++->H = h;
+	e = 0;
+
+	do {
+	    h = p + *pwaa++;
+	    p = ssj->H;
+
+	    if (h < f) h = f;
+	    f += ext;
+
+	    if ((e = ssj->E) > 0) {
+		if (p == -1) goto next_row;
+		if (h < e) h = e;
+		else if (h > gap) {
+		    e += ext;
+		    goto transition;
+		}
+		e += ext;	
+		ssj->E = (e > 0) ? e : 0;
+		ssj++->H = h;
+	    }
+	    else {
+		if (h > gap) {
+		    e = 0;
+		    goto transition;
+		}
+		ssj++->H = h;
+	    }
+	} while (f > 0);
+	goto zero_f;
+    next_row:
+	;
+    }
+
+    free(waa);
+    return score;
+}
