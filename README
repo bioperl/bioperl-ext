@@ -3,7 +3,7 @@ This is the directory for the Bioperl C compiled Extensions.
 
 These currently include:
 
-   Bio::Ext::Align (Ewan Birney <birney@sanger.ac.uk>)
+   Bio::Ext::Align (Ewan Birney <birney@sanger.ac.uk> and Yee Man Chen <ymc@paxil.stanford.edu>)
    Bio::SeqIO::staden::read (Aaron Mackey <amackey@virginia.edu>)
 
 To install all of the extension packages, you can use the top-level
@@ -30,7 +30,8 @@ Although these extensions can be called by themselves, they
 really need the main bioperl distribution to drive them. The
 modules which do this are 
 
-   Bio::Tools::pSW - makes smith waterman alignments
+   Bio::Tools::pSW - makes Smith-Waterman alignments for DNA
+   Bio::Tolls::dpAlign - makes Smith-Waterman alignments for proteins
    Bio::SearchDist - deals with EVD fitting of extreme value distributions
 
 For more information on how to use these modules, read their own documentation
@@ -47,14 +48,22 @@ to installing Bio::SeqIO::staden::read, it's currently available at:
 
   ftp://ftp.mrc-lmb.cam.ac.uk/pub/staden/io_lib/
 
-The make process will prompt you for the LIB and INCLUDE locations
-(usually /usr/local/lib and usr/local/include/io_lib, respectively) of
-the io_lib "libread" library and Read.h header files, after trying to
-automatically find them.  You may also specify these via the
-environment variables "IOLIB_LIB" and "IOLIB_INC", or via identically
-named options to perl Makefile.PL:
+Many users have noted that the io_lib install process often forgets to
+install the "os.h" file along with the rest of the include files; you
+may have to do this manually.
+
+The bioperl-ext make process will prompt you for the LIB and INCLUDE
+locations (usually /usr/local/lib and usr/local/include/io_lib,
+respectively) of the io_lib "libread" library and Read.h header files,
+after trying to automatically find them.  You may also specify these
+via the environment variables "IOLIB_LIB" and "IOLIB_INC", or via
+identically named options to perl Makefile.PL:
 
   perl Makefile.PL IOLIB_LIB=/opt/lib IOLIB_INC=/opt/include/io_lib
 
 Ignore any warnings about these options being unknown to MakeMaker.
+
+A failed compilation is most likely due to an incomplete io_lib
+installation; make sure that all the required io_lib ".h" files are in
+place.
 
