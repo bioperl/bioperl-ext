@@ -5,7 +5,7 @@ WriteInlineMakefile(
 		    'NAME'		=> 'Bio::SeqIO::staden::read',
 		    'VERSION_FROM'	=> './read.pm', # finds $VERSION,
 		    'PREREQ_PM'		=> { 'Inline::C' => 0.0,
-					     'Bio::SeqIO' => 0.0,
+					     'Bio::SeqIO::abi' => 0.0,
 					   }, # e.g., Module::Name => 1.1,
 		    test                => { TESTS => 'test.pl' },
 		   );
