@@ -10,6 +10,12 @@ WriteInlineMakefile(
 		    test                => { TESTS => 'test.pl' },
 		   );
 
+sub MY::test_via_script {
+    package MY;
+    my $self = shift;
+    return ''; # prevent double-run of test.pl
+}
+
 sub MY::post_initialize {
     package MY;
     my $self = shift;
