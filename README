@@ -3,7 +3,7 @@ This is the directory for the Bioperl C compiled Extensions.
 
 These currently include:
 
-   Bio::Ext::Align (Ewan Birney <birney@sanger.ac.uk> and Yee Man Chen <ymc@paxil.stanford.edu>)
+   Bio::Ext::Align (Ewan Birney <birney@sanger.ac.uk> and Yee Man Chan <ymc@paxil.stanford.edu>)
    Bio::SeqIO::staden::read (Aaron Mackey <amackey@virginia.edu>)
 
 To install all of the extension packages, you can use the top-level
