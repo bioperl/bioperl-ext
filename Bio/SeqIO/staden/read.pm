@@ -78,8 +78,8 @@ sub BEGIN {
 	use Inline (C => 'DATA',
 		    VERSION => '0.01',
 		    NAME => 'Bio::SeqIO::staden::read',
-		    LIBS => "-L/usr/local/lib -lread -lz",    # leave these as double quotes - necessary for Makefile.PL function
-		    INC  => "-I/usr/local/include/io_lib"            # leave these as double quotes - necessary for Makefile.PL function
+		    LIBS => "-L/usr/local/lib -lread -lz", # leave these as double quotes - necessary for Makefile.PL function
+		    INC  => "-I/usr/local/include/io_lib", # leave these as double quotes - necessary for Makefile.PL function
 		   );
     } or Bio::Root::Root::throw( -class => 'Bio::Root::SystemException',
 				 -text  => "No Inline::C (or maybe io-lib?) support available",
@@ -196,7 +196,7 @@ int staden_write_trace(SV *self, FILE *fh, int format,
   read->leftCutoff = 0;
   read->rightCutoff = len + 1;
   
-  qualarr = SvRV(qual);
+  qualarr = (AV *) SvRV(qual);
   n = av_len(qualarr) + 1;
   for (i = 0 ; i < n && i < len ; i++) {
     val = *(av_fetch(qualarr, i, 0));

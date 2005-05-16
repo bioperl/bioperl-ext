@@ -69,7 +69,7 @@ sub MY::post_initialize {
 	$iolibinc = ExtUtils::MakeMaker::prompt("Please tell us where your Staden io_lib \"Read.h\" header is installed: ", $prompt);
     }
 
-    `perl -pi -e 's{(LIBS\\s*=>\\s*")([^"]+)}{\$1-L$ioliblib -lread};' read.pm`;
+    `perl -pi -e 's{(LIBS\\s*=>\\s*")([^"]+)}{\$1-L$ioliblib -lread -lz};' read.pm`;
     `perl -pi -e 's{(INC\\s*=>\\s*")([^"]+)}{\$1-I$iolibinc};' read.pm`;
 
     return '';
