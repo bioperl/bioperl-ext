@@ -6,7 +6,9 @@ typedef struct HMM
    int M;
    int N;
    char * symbols;
+   unsigned char omap[256];
    char * states;
+   unsigned char smap[256];
    double * init;
    double ** a_mat;
    double ** e_mat;
@@ -23,10 +25,12 @@ double HMM_get_a_entry(HMM *, char *, char *);
 void HMM_set_a_entry(HMM *, char *, char *, double);
 double HMM_get_e_entry(HMM *, char *, char *);
 void HMM_set_e_entry(HMM *, char *, char *, double);
-double Palpha(HMM *, char *);
-double Pbeta(HMM *, char *);
-void viterbi(HMM *, char *, char *);
-void state_est(HMM *, char **, char **, int);
-void baum_welch(HMM *, char **, int);
+void omap(HMM *, char *, int);
+void smap(HMM *, char *, int);
+double Palpha(HMM *, char *, int);
+double Pbeta(HMM *, char *, int);
+void viterbi(HMM *, char *, char *, int);
+void state_est(HMM *, char **, char **, int *, int);
+void baum_welch(HMM *, char **, int *, int);
 
 #endif 

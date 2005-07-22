@@ -59,9 +59,10 @@ foreach $r ($matrix->row_names) {
    printf "\n";
 }
 
+printf "\n";
 printf "Log Probability of sequence 1: %g\n", $hmm->likelihood($seq1);
 printf "Log Probability of sequence 2: %g\n", $hmm->likelihood($seq2);
-
+printf "\n";
 printf "Statistical Training\n";
 printf "====================\n";
 

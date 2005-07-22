@@ -26,15 +26,33 @@ HMM_statistical_training(class, hmm, obs, hs)
         int avlen = av_len(obs_av);
         char ** obs_ar = (char **) malloc(avlen*sizeof(char *));
         char ** hs_ar = (char **) malloc(avlen*sizeof(char *));
+        int * obs_len = (int *) malloc(avlen*sizeof(int));
         if (obs_ar == NULL || hs_ar == NULL)
            croak("Can't allocate memory for observation and/or state arrays!\n");
+        if (obs_len == NULL)
+           croak("Can't allocate memory for observation length array!\n");
         for (i = 0; i < avlen; ++i) {
            obs_ar[i] = (char *) SvPV(*av_fetch(obs_av, i, 0), PL_na);   
-           hs_ar[i] = (char *) SvPV(*av_fetch(hs_av, i, 0), PL_na);   
+           obs_len[i] = strlen(obs_ar[i]);
+           obs_ar[i] = (char *) malloc((obs_len[i]+1)*sizeof(char));
+           if (obs_ar[i] == NULL)
+              croak("Can't allocate memory for observation array!\n");
+           strcpy(obs_ar[i], (char *) SvPV(*av_fetch(obs_av, i, 0), PL_na));
+           hs_ar[i] = (char *) malloc((obs_len[i]+1)*sizeof(char));
+           if (hs_ar[i] == NULL)
+              croak("Can't allocate memory for state array!\n");
+           strcpy(hs_ar[i], (char *) SvPV(*av_fetch(hs_av, i, 0), PL_na));
+           omap(hmm, obs_ar[i], obs_len[i]);   
+           smap(hmm, hs_ar[i], obs_len[i]);   
         }
-        state_est(hmm, obs_ar, hs_ar, avlen);
+        state_est(hmm, obs_ar, hs_ar, obs_len, avlen);
+        for (i = 0; i < avlen; ++i) { 
+           free(obs_ar[i]);
+           free(hs_ar[i]);
+        }
         free(obs_ar);
         free(hs_ar);
+        free(obs_len);
 
 double
 HMM_likelihood(class, hmm, seq)
@@ -42,7 +60,11 @@ HMM_likelihood(class, hmm, seq)
         HMM * hmm
         char * seq
         CODE:
-        RETVAL = Palpha(hmm, seq);
+        int T = strlen(seq);
+        char obs[T+1];
+        strcpy(obs, seq);
+        omap(hmm, obs, T);
+        RETVAL = Palpha(hmm, obs, T);
         OUTPUT:
         RETVAL
 
@@ -56,25 +78,40 @@ HMM_baum_welch_training(class, hmm, obs)
         int i;
         int avlen = av_len(obs_av);
         char ** obs_ar = (char **) malloc(avlen*sizeof(char *));
+        int * obs_len = (int *) malloc(avlen*sizeof(int));
         if (obs_ar == NULL)
            croak("Can't allocate memory for observation arrays!\n");
+        if (obs_len == NULL)
+           croak("Can't allocate memory for observation length array!\n");
         for (i = 0; i < avlen; ++i) {
-           obs_ar[i] = (char *) SvPV(*av_fetch(obs_av, i, 0), PL_na);   
+           obs_ar[i] = (char *) SvPV(*av_fetch(obs_av, i, 0), PL_na);
+           obs_len[i] = strlen(obs_ar[i]);
+           obs_ar[i] = (char *) malloc((obs_len[i]+1)*sizeof(char));
+           if (obs_ar[i] == NULL)
+              croak("Can't allocate memory for observation array!\n");
+           strcpy(obs_ar[i], (char *) SvPV(*av_fetch(obs_av, i, 0), PL_na));
+           omap(hmm, obs_ar[i], obs_len[i]);   
         }
-        baum_welch(hmm, obs_ar, avlen);
+        baum_welch(hmm, obs_ar, obs_len, avlen);
+        for (i = 0; i < avlen; ++i) 
+           free(obs_ar[i]);
         free(obs_ar);
 
 SV *
-HMM_viterbi(class, hmm, obs)
+HMM_viterbi(class, hmm, seq)
         char * class
         HMM * hmm
-        char * obs
+        char * seq	 
         PPCODE:
         SV * sv;
-        char * hss = (char *) malloc(strlen(obs)*sizeof(char));
+        int T = strlen(seq);
+        char * hss = (char *) malloc(T*sizeof(char));
+        char obs[T+1];
         if (hss == NULL)
            croak("Can't allocate memory for hidden state sequence!\n");
-        viterbi(hmm, hss, obs);
+        strcpy(obs, seq);
+        omap(hmm, obs, T);
+        viterbi(hmm, hss, obs, T);
         sv = newSVpv(hss, strlen(hss));
         free(hss);
         PUSHs(sv_2mortal(sv));
