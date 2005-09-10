@@ -3514,6 +3514,14 @@ end2(obj)
         OUTPUT:
         RETVAL
 
+int
+score(obj)
+        dpAlign_AlignOutput * obj
+        CODE:
+        RETVAL = obj->score;
+        OUTPUT:
+        RETVAL
+
 void
 DESTROY(obj)
         dpAlign_AlignOutput * obj

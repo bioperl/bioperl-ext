@@ -651,6 +651,7 @@ traceback(sw_AlignStruct * as)
     if (ao == NULL)
 	dpAlign_fatal("Can't allocate memory for AlignOutput!\n");
 
+    ao->score = as->score;
 /* insert gaps to sequence 1 */
     k = 0;
     for (i = 0; i <= aln1_len; ++i) {
