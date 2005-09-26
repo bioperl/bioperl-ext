@@ -1,6 +1,6 @@
 o Version
 
- This is Bioperl-ext version 1.5.1 from CVS HEAD
+ This is Bioperl-ext version 1.3 from CVS HEAD
 
 o Summary
 
@@ -71,8 +71,7 @@ o Notes for Bio::SeqIO::staden::read
  install the "config.h" file for "os.h" to find all the information it
  needs.  Finally, you may also need to edit "os.h" to #include
  <config.h> instead of #include "config.h" if you continue to get
- undefined symbol errors during compilation.  On some OSes you may in fact
- have to do the OPPOSITE, meaning change <config.h> to "config.h".
+ undefined symbol errors during compilation.
  
  The bioperl-ext make process will prompt you for the LIB and INCLUDE
  locations (usually /usr/local/lib and usr/local/include/io_lib,

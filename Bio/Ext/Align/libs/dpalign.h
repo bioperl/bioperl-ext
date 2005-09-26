@@ -29,7 +29,6 @@ typedef struct _dpAlign_alnoutput {
    char * aln2; /* aligned subsequence of sequence 2 with space '-' inserted */
    int start2; /* start point of aligned subsequence 2 */
    int end2; /* end point of aligned subsequence 2 */
-   int score; /* score of this alignment */
 } dpAlign_AlignOutput;
 
 typedef struct _dpAlign_SequenceProfile {
