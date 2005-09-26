@@ -10,7 +10,7 @@ extern "C" {
 #endif
 
 #include "sw.h"
-
+#include "dpalign.h"
 
 static int
 not_here(s)
@@ -3307,7 +3307,225 @@ Align_Proteins_SmithWaterman(one,two,comp,gap,ext)
 	OUTPUT:
 	RETVAL
 
+MODULE = Bio::Ext::Align PACKAGE = Bio::Ext::Align
 
+dpAlign_AlignOutput *
+Align_DNA_Sequences(seq1, seq2, match, mismatch, gap, ext, alg)
+        char * seq1
+        char * seq2
+        int match
+        int mismatch
+        int gap
+        int ext
+        int alg
+        CODE:
+        switch (alg) {
+        case 1:
+            RETVAL = dpAlign_Local_DNA_MillerMyers(seq1, seq2, match, mismatch, gap, ext);
+            break;
+        case 2:
+            RETVAL = dpAlign_Global_DNA_MillerMyers(seq1, seq2, match, mismatch, gap, ext);
+            break;
+        default:
+            RETVAL = dpAlign_Local_DNA_MillerMyers(seq1, seq2, match, mismatch, gap, ext);
+            break;
+        }
+        OUTPUT:
+        RETVAL
 
+dpAlign_AlignOutput *
+Align_Protein_Sequences(seq1, seq2, matrix, alg)
+        char * seq1
+        char * seq2
+        dpAlign_ScoringMatrix * matrix
+	int alg
+        CODE:
+        switch (alg) {
+        case 1:
+            RETVAL = dpAlign_Local_Protein_MillerMyers(seq1, seq2, matrix);
+            break;
+        case 2:
+            RETVAL = dpAlign_Global_Protein_MillerMyers(seq1, seq2, matrix);
+            break;
+        default:
+            RETVAL = dpAlign_Local_Protein_MillerMyers(seq1, seq2, matrix);
+            break;
+        }
+        OUTPUT:
+        RETVAL
 
+int
+Score_DNA_Sequences(sp, seq2)
+        dpAlign_SequenceProfile * sp
+        char * seq2
+        CODE:
+        RETVAL = dpAlign_Local_DNA_PhilGreen(sp, seq2);
+        ST(0) = sv_newmortal();
+        sv_setiv(ST(0), (IV)RETVAL);
+        XSRETURN(1);
+
+int
+Score_Protein_Sequences(sp, seq2)
+        dpAlign_SequenceProfile * sp
+        char * seq2
+        CODE:
+        RETVAL = dpAlign_Local_Protein_PhilGreen(sp, seq2);
+        ST(0) = sv_newmortal();
+        sv_setiv(ST(0), (IV)RETVAL);
+        XSRETURN(1);
+
+MODULE = Bio::Ext::Align PACKAGE = Bio::Ext::Align::ScoringMatrix
+
+dpAlign_ScoringMatrix *
+new(class, alphabet, gap, ext)
+        char * class
+        char * alphabet
+        int gap
+        int ext
+        PPCODE:
+        dpAlign_ScoringMatrix * out;
+        out = new_dpAlign_ScoringMatrix(alphabet, gap, ext);
+        ST(0) = sv_newmortal();
+        sv_setref_pv(ST(0), class, (void *) out);
+        XSRETURN(1);
+
+void
+set_entry(class, matrix, row, col, val)
+        char * class
+        dpAlign_ScoringMatrix * matrix
+        char * row
+        char * col
+        int val
+        PPCODE:
+        set_dpAlign_ScoringMatrix(matrix, row, col, val);
+        XSRETURN(1);
+
+void
+DESTROY(obj)
+        dpAlign_ScoringMatrix * obj
+        PPCODE:
+        int i;
+        for (i = 0; i < obj->sz; ++i)
+            free(obj->s[i]);
+        free(obj->s);
+
+MODULE = Bio::Ext::Align PACKAGE = Bio::Ext::Align::SequenceProfile
+
+dpAlign_SequenceProfile *
+dna_new(class, seq1, match, mismatch, gap, ext)
+        char * class
+        char * seq1
+        int match
+        int mismatch
+        int gap
+        int ext
+        PPCODE:
+        dpAlign_SequenceProfile * out;
+        out = dpAlign_DNA_Profile(seq1, match, mismatch, gap, ext);
+        ST(0) = sv_newmortal();
+        sv_setref_pv(ST(0), class, (void *) out);
+        XSRETURN(1);
+
+dpAlign_SequenceProfile *
+protein_new(class, seq1, matrix)
+        char * class
+        char * seq1
+        dpAlign_ScoringMatrix * matrix
+        PPCODE:
+        dpAlign_SequenceProfile * out;
+        out = dpAlign_Protein_Profile(seq1, matrix);
+        ST(0) = sv_newmortal();
+        sv_setref_pv(ST(0), class, (void *) out);
+        XSRETURN(1);
+
+char *
+alphabet(obj)
+        dpAlign_SequenceProfile * obj
+        CODE:
+        switch (obj->type) {
+            case 1:
+                RETVAL = "dna";
+                break;
+            case 2:
+                RETVAL = "protein";
+                break;
+            case 3:
+                RETVAL = "rna";
+                break;
+            default:
+                RETVAL = "unknown";
+        }
+        OUTPUT:
+        RETVAL
+
+void
+DESTROY(obj)
+        dpAlign_SequenceProfile * obj
+        CODE:
+        free(obj->waa);
+
+MODULE = Bio::Ext::Align PACKAGE = Bio::Ext::Align::AlignOutput
+
+char *
+aln1(obj)
+        dpAlign_AlignOutput * obj
+	CODE:
+        RETVAL = obj->aln1;
+        OUTPUT:
+        RETVAL
+
+char *
+aln2(obj)
+        dpAlign_AlignOutput * obj
+        CODE:
+        RETVAL = obj->aln2;
+        OUTPUT:
+        RETVAL
+
+int
+start1(obj)
+        dpAlign_AlignOutput * obj
+        CODE:
+        RETVAL = obj->start1;
+        OUTPUT:
+        RETVAL
+
+int
+end1(obj)
+        dpAlign_AlignOutput * obj
+        CODE:
+        RETVAL = obj->end1;
+        OUTPUT:
+        RETVAL
+
+int
+start2(obj)
+        dpAlign_AlignOutput * obj
+        CODE:
+        RETVAL = obj->start2;
+        OUTPUT:
+        RETVAL
+
+int
+end2(obj)
+        dpAlign_AlignOutput * obj
+        CODE:
+        RETVAL = obj->end2;
+        OUTPUT:
+        RETVAL
+
+int
+score(obj)
+        dpAlign_AlignOutput * obj
+        CODE:
+        RETVAL = obj->score;
+        OUTPUT:
+        RETVAL
+
+void
+DESTROY(obj)
+        dpAlign_AlignOutput * obj
+        CODE:
+        free(obj->aln1);
+        free(obj->aln2);
 
