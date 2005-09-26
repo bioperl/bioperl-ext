@@ -3,7 +3,7 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 WriteMakefile(
     'NAME'	=> 'Bio::Ext::Align',
-    'VERSION'	=> '0.1',
+    'VERSION'	=> '1.5.1',
     'LIBS'	=> ['-lm'],   # e.g., '-lm' 
     'DEFINE'	=> '-DPOSIX -DNOERROR',     # e.g., '-DHAVE_SOMETHING' 
     'INC'	=> '-I./libs',     # e.g., '-I/usr/include/other'

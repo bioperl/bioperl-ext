@@ -86,7 +86,7 @@ sub BEGIN {
 			       );
 }
 
-$VERSION = 0.01;
+$VERSION = 1.5.1;
 
 my %formats = ( scf => 1,
 		abi => 2,
