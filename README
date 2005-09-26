@@ -1,6 +1,6 @@
 o Version
 
- This is Bioperl-ext version 1.5.1 from CVS HEAD
+ This is Bioperl-ext version 1.3 from CVS HEAD
 
 o Summary
 
@@ -65,14 +65,9 @@ o Notes for Bio::SeqIO::staden::read
  
    ftp://ftp.mrc-lmb.cam.ac.uk/pub/staden/io_lib/
  
- Many users have noted that the io_lib install process often forgets
- to install the "os.h" file along with the rest of the include files;
- you may have to do this manually.  If so, you may also have to
- install the "config.h" file for "os.h" to find all the information it
- needs.  Finally, you may also need to edit "os.h" to #include
- <config.h> instead of #include "config.h" if you continue to get
- undefined symbol errors during compilation.  On some OSes you may in fact
- have to do the OPPOSITE, meaning change <config.h> to "config.h".
+ Many users have noted that the io_lib install process often forgets to
+ install the "os.h" file along with the rest of the include files; you
+ may have to do this manually.
  
  The bioperl-ext make process will prompt you for the LIB and INCLUDE
  locations (usually /usr/local/lib and usr/local/include/io_lib,
@@ -87,5 +82,5 @@ o Notes for Bio::SeqIO::staden::read
  
  A failed compilation is most likely due to an incomplete io_lib
  installation; make sure that all the required io_lib ".h" files are in
- place (see above regarding "os.h" and "config.h").
+ place.
 

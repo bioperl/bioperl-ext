@@ -42,8 +42,8 @@ OBJS =	aln.o\
 libsw.a : $(OBJS)
 	ar ru libsw.a $(OBJS)
 
-#wisefile.o : wisefile.c
-#	$(CC) $(CFLAGS) -DNOERROR wisefile.c
+wisefile.o : wisefile.c
+	$(CC) $(CFLAGS) -DNOERROR wisefile.c
 
 #
 # For NetBSD or Sun (solaris) installs, add -fPIC to the CFLAGS lines
