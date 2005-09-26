@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'      => 'Bio',
     'DISTNAME'  => 'bioperl-ext',
-    'VERSION'	=> '1.5.0-RC1',
+    'VERSION'	=> '1.5.1-RC1',
     'DIR'       => [ qw( Bio/Ext/Align Bio/SeqIO/staden )],
     'dist'      => {  COMPRESS     => 'gzip -9f',
                       SUFFIX       => '.gz', 
