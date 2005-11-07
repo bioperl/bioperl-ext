@@ -60,7 +60,7 @@ dpAlign_fatal(char * s)
   arrays spc1 and spc2 will also be set to the proper values.
  */ 
 int
-align(unsigned char * A, unsigned char * B, int M, int N, int ** s, int g, int e, struct swstr * F, struct swstr * R, int * spc1, int * spc2)
+align(unsigned char * A, unsigned char * B, int M, int N, int ** s, int g, int h, struct swstr * F, struct swstr * R, int * spc1, int * spc2)
 {
     int midi, midj, type;
     int midc;
@@ -70,24 +70,24 @@ align(unsigned char * A, unsigned char * B, int M, int N, int ** s, int g, int e
     int c; /* score of a cell */
     int d; /* down value in Q array */
     int * ss; 
-    int h = g + e;
+    int m = g + h;
 
 /* if the mstrix to divide and conquer has size <= 1 */
     if (N <= 0) {
 	if (M > 0) *spc2 += M;
-	return -gap(M, g, e);
+	return -gap(M);
     }
 
     if (M <= 1) {
 	if (M <= 0) {
 	    *spc1 += N;
-	    return -gap(N, g, e); 
+	    return -gap(N);
 	}
-	midc = -h - gap(N, g, e);
+	midc = -m - gap(N);
 	midj = 0;
 	ss = s[A[0]];
 	for (j = 1; j <= N; ++j) {
-	    c = -gap(j-1, g, e) + ss[B[j-1]] - gap(N-j, g, e);
+	    c = -gap(j-1) + ss[B[j-1]] - gap(N-j);
 	    if (c > midc) {
 		midc = c;
 		midj = j;
@@ -107,8 +107,10 @@ align(unsigned char * A, unsigned char * B, int M, int N, int ** s, int g, int e
     swp = F;
     F[0].H = 0;
     t = -g;
-    for (swp = F+1; swp <= F+N; ++swp) 
-	 swp->E = swp->H = t = t - e;
+    for (swp = F+1; swp <= F+N; ++swp) { 
+	 swp->H = t = t - h;
+         swp->E = swp->H - g; // Q[m][0]
+    }
 
 /* Calculate forward matrix cost */
 
@@ -116,11 +118,12 @@ align(unsigned char * A, unsigned char * B, int M, int N, int ** s, int g, int e
     midi = M/2;
     for (i = 0; i < midi; ++i) {
 	from = F[0].H;
-	F[0].H = c = P = t = t - e;
+	F[0].H = c = t = t - h;
+        P = c - g;
 	ss = s[A[i]];
 	for (swp = F+1, j = 0; j < N; ++swp, ++j) {
-	    if ((c = c - h) > (P = P - e)) P = c;
-	    if ((c = swp->H - h) > (d = swp->E - e)) d = c;
+            if ((c = c - m) > (P = P - h)) P = c;
+            if ((c = swp->H - m) > (d = swp->E - h)) d = c;
 	    c = from + ss[B[j]];
 	    if (P > c) c = P;
 	    if (d > c) c = d;
@@ -133,19 +136,22 @@ align(unsigned char * A, unsigned char * B, int M, int N, int ** s, int g, int e
 
     R[0].H = 0;
     t = -g;
-    for (swp = R+1; swp <= R+N; ++swp) 
-	 swp->E = swp->H = t = t - e;
+    for (swp = R+1; swp <= R+N; ++swp) { 
+	 swp->H = t = t - h;
+         swp->E = swp->H - g; // P[m][0]
+    }
 
 /* Calculate backward matrix cost */
 
     t = -g;
     for (i = M-1; i >=midi; --i) {
 	from = R[0].H;
-	R[0].H = P = c = t = t - e;
+	R[0].H = c = t = t - h;
+        P = c - g;
 	ss = s[A[i]];
 	for (swp = R+1, j = N-1; j >= 0; ++swp, --j) {
-	    if ((c = c - h) > (P = P - e)) P = c;
-	    if ((c = swp->H - h) > (d = swp->E - e)) d = c;
+            if ((c = c - m) > (P = P - h)) P = c;
+            if ((c = swp->H - m) > (d = swp->E - h)) d = c;
 	    c = from + ss[B[j]];
 	    if (P > c) c = P;
 	    if (d > c) c = d;
@@ -163,9 +169,11 @@ align(unsigned char * A, unsigned char * B, int M, int N, int ** s, int g, int e
 
     for (j = N-1; j >= 0; --j) {
 	c = F[j].H + R[N-j].H;
-	if (c > midc) {
-	    midc = c;
-	    midj = j;
+	if (c >= midc) {
+            if (c > midc || F[j].H == F[j].E && R[N-j].H != R[N-j].E) {
+	       midc = c;
+	       midj = j;
+            }
 	}
     }
 
@@ -179,13 +187,13 @@ align(unsigned char * A, unsigned char * B, int M, int N, int ** s, int g, int e
     }
 
     if (type == 1) {
-	align(A, B, midi, midj, s, g, e, F, R, spc1, spc2);
-	align(A+midi, B+midj, M-midi, N-midj, s, g, e, F, R, spc1+midi, spc2+midj);
+	align(A, B, midi, midj, s, g, h, F, R, spc1, spc2);
+	align(A+midi, B+midj, M-midi, N-midj, s, g, h, F, R, spc1+midi, spc2+midj);
     }
     else {
-	align(A, B, midi-1, midj, s, g, e, F, R, spc1, spc2);
+	align(A, B, midi-1, midj, s, g, h, F, R, spc1, spc2);
 	*(spc2+midj) += 2;
-	align(A+midi+1, B+midj, M-midi-1, N-midj, s, g, e, F, R, spc1+midi+1, spc2+midj);
+	align(A+midi+1, B+midj, M-midi-1, N-midj, s, g, h, F, R, spc1+midi+1, spc2+midj);
     }
     return midc;
 }

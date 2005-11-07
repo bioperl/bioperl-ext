@@ -16,7 +16,7 @@ struct swstr {
     int E; /* score for DD/SS matrix */   
 };
 
-#define gap(k, g, h) ((k) <= 0 ? 0 : (g)+(h)*(k)) /* gap cost */
+#define gap(k) ((k) <= 0 ? 0 : g+h*(k)) /* gap cost */
 /* a naive macro to encode DNA nucleotide */
 #define dna_encode(c) (c == 'A' ? 0x00 : c == 'C' ? 0x01 : c == 'G' ? 0x02 : c == 'T' ? 0x03 : c == 'U' ? 0x04 : c == 'R' ? 0x05 : c == 'Y' ? 0x06 : c == 'M' ? 0x07 : c == 'W' ? 0x08 : c == 'S' ? 0x09 : c == 'K' ? 0x0a : c == 'D' ? 0x0b : c == 'H' ? 0x0c : c == 'V' ? 0x0d : c == 'B' ? 0x0e : c == 'N' ? 0x0f : c == 'X' ? 0x10 : -1)
 /* a naive macro to encode amino acids */
