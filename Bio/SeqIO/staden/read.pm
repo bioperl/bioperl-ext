@@ -75,7 +75,7 @@ sub BEGIN {
 #			);
 
 	use Inline (C => 'DATA',
-		    VERSION => '0.01',
+		    VERSION => '1.51',
 		    NAME => 'Bio::SeqIO::staden::read',
 		    LIBS => "-L/usr/local/lib -lread -lz", # leave these as double quotes - necessary for Makefile.PL function
 		    INC  => "-I/usr/local/include/io_lib", # leave these as double quotes - necessary for Makefile.PL function
@@ -85,7 +85,7 @@ sub BEGIN {
 			       );
 }
 
-$VERSION = 1.5.1;
+$VERSION = 1.51;
 
 my %formats = ( scf => 1,
 		abi => 2,
