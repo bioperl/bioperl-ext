@@ -51,8 +51,10 @@ typedef struct _dpAlign_ScoringMatrix {
 
 dpAlign_AlignOutput * dpAlign_Local_DNA_MillerMyers(char *, char *, int, int, int, int);
 dpAlign_AlignOutput * dpAlign_Global_DNA_MillerMyers(char *, char *, int, int, int, int);
+dpAlign_AlignOutput * dpAlign_EndsFree_DNA_MillerMyers(char *, char *, int, int, int, int);
 dpAlign_AlignOutput * dpAlign_Local_Protein_MillerMyers(char *, char *, dpAlign_ScoringMatrix *);
 dpAlign_AlignOutput * dpAlign_Global_Protein_MillerMyers(char *, char *, dpAlign_ScoringMatrix *);
+dpAlign_AlignOutput * dpAlign_EndsFree_Protein_MillerMyers(char *, char *, dpAlign_ScoringMatrix *);
 dpAlign_SequenceProfile * dpAlign_Protein_Profile(char *, dpAlign_ScoringMatrix *);
 int dpAlign_Local_Protein_PhilGreen(dpAlign_SequenceProfile *, char *);
 dpAlign_SequenceProfile * dpAlign_DNA_Profile(char *, int, int, int, int);

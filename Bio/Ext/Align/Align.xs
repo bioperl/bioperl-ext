@@ -3326,6 +3326,9 @@ Align_DNA_Sequences(seq1, seq2, match, mismatch, gap, ext, alg)
         case 2:
             RETVAL = dpAlign_Global_DNA_MillerMyers(seq1, seq2, match, mismatch, gap, ext);
             break;
+        case 3:
+            RETVAL = dpAlign_EndsFree_DNA_MillerMyers(seq1, seq2, match, mismatch, gap, ext);
+            break;
         default:
             RETVAL = dpAlign_Local_DNA_MillerMyers(seq1, seq2, match, mismatch, gap, ext);
             break;
@@ -3346,6 +3349,9 @@ Align_Protein_Sequences(seq1, seq2, matrix, alg)
             break;
         case 2:
             RETVAL = dpAlign_Global_Protein_MillerMyers(seq1, seq2, matrix);
+            break;
+        case 3:
+            RETVAL = dpAlign_EndsFree_Protein_MillerMyers(seq1, seq2, matrix);
             break;
         default:
             RETVAL = dpAlign_Local_Protein_MillerMyers(seq1, seq2, matrix);

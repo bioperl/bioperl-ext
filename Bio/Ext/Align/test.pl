@@ -34,7 +34,7 @@ $alb = &Bio::Ext::Align::Align_Sequences_ProteinSmithWaterman($seq1,$seq2,
 					 $seq2->seq,15,50,STDERR) if $DEBUG;
 
 
-warn( "Testing Local Alignment case...\n") if $DEBUg;
+warn( "Testing Local Alignment case...\n") if $DEBUG;
 
 $alnout = new Bio::AlignIO(-format => 'pfam', -fh => \*STDERR);
 $aln = &Bio::Ext::Align::Align_DNA_Sequences("AATGCCATTGACGG",
@@ -54,8 +54,8 @@ $out->add_seq(Bio::LocatableSeq->new(-seq   => $aln->aln2,
 				     -id    => "two"));
 $alnout->write_aln($out) if $DEBUG;
 
-$aln = &Bio::Ext::Align::Align_Protein_Sequences("WLGQRNLVSSTGGNLLNVWLKDW","WMGNRNVVNLLNVWFRDW",0,
-						 Bio::Tools::dpAlign::DPALIGN_LOCAL_MILLER_MYERS);
+$aln = &Bio::Ext::Align::Align_Protein_Sequences("WLGQRNLVSSTGGNLLNVWLKDW","WMGNRNVVNLLNVWFRDW",0,Bio::Tools::dpAlign::DPALIGN_LOCAL_MILLER_MYERS);
+
 $out = Bio::SimpleAlign->new();
 ok($aln);
 
@@ -91,7 +91,33 @@ $alnout->write_aln($aln) if $DEBUG;
 $factory->align_and_show($s1, $s2) if $DEBUG;
 ok(1);
 
+warn( "Testing Ends-Free Alignment case...\n") if $DEBUG;
+
+$factory = new Bio::Tools::dpAlign('-alg' => Bio::Tools::dpAlign::DPALIGN_ENDSFREE_MILLER_MYERS);
+$s1 = new Bio::Seq(-id => "one", -seq => "AATGCCATTGACGG", -alphabet => 'dna');
+$s2 = new Bio::Seq(-id => "two", -seq => "CAGCCTCGCTTAG", -alphabet => 'dna');
+$aln = $factory->pairwise_alignment($s1, $s2);
+$alnout->write_aln($aln) if $DEBUG;
+$factory->align_and_show($s1, $s2) if $DEBUG;
+
+ok(1);
+
+$s1 = new Bio::Seq(-id => "one", -seq => "WLGQRNLVSSTGGNLLNVWLKDW", 
+		   -alphabet => 'protein');
+$s2 = new Bio::Seq(-id => "two", -seq => "NVVNLLNVWFRDWAVQPL", 
+		   -alphabet => 'protein');
+$aln = $factory->pairwise_alignment($s1, $s2);
+$alnout->write_aln($aln) if $DEBUG;
+$factory->align_and_show($s1, $s2) if $DEBUG;
+ok(1);
+
+warn( "Testing Profile Local Alignment Score case...\n") if $DEBUG;
+
+$s1 = new Bio::Seq(-id => "one", -seq => "WLGQRNLVSSTGGNLLNVWLKDW", 
+                   -alphabet => 'protein');
+$s2 = new Bio::Seq(-id => "two", -seq => "WMGNRNVVNLLNVWFRDW", 
+                   -alphabet => 'protein');
 $prof = $factory->sequence_profile($s1);
-warn( "Optimal Alignment Score = %d\n", $factory->pairwise_alignment_score($prof, $s2)) if $DEBUG;
+warn(sprintf "Optimal Alignment Score = %d\n", $factory->pairwise_alignment_score($prof, $s2)) if $DEBUG;
 
 ok($factory->pairwise_alignment_score($prof,$s2),77);
