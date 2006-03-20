@@ -106,6 +106,13 @@ HMM_new(char * symbols, char * states)
    for (j = 0; j < hmm->N; ++j) 
       hmm->init[j] /= sum;
    hmm->e_mat = (double **) malloc(hmm->N*sizeof(double *));
+   if (hmm->e_mat == NULL) 
+      HMM_fatal("Can't allocate memory for emission matrix of HMM, die!\n");
+   for (i = 0; i < hmm->N; ++i) {
+      hmm->e_mat[i] = (double *) malloc(hmm->M*sizeof(double));
+      if (hmm->e_mat[i] == NULL)
+         HMM_fatal("Can't allocate memory for emission matrix of HMM, die!\n");
+   }
    hmm->a_mat = (double **) malloc(hmm->N*sizeof(double *));
    if (hmm->a_mat == NULL) 
       HMM_fatal("Can't allocate memory for transition matrix of HMM, die!\n");
@@ -132,7 +139,6 @@ HMM_new(char * symbols, char * states)
       hmm->e_mat[i] = (double *) malloc(hmm->M*sizeof(double));
       if (hmm->e_mat[i] == NULL)
          HMM_fatal("Can't allocate memory for emission matrix of HMM, die!\n");
-
 /* randomize the emission matrix */
       sum = 0.0;
       for (j = 0; j < hmm->M; ++j) {
@@ -159,10 +165,8 @@ init_HMM(char * symbols, char * states, double * init, double ** a_mat, double *
    int i;
 
    hmm = (HMM *) calloc(1, sizeof(HMM));
-   if (hmm == NULL) {
-      fprintf(stderr, "Can't allocate memory for HMM, die!\n");
-      exit(-1);
-   }
+   if (hmm == NULL) 
+      HMM_fatal("Can't allocate memory for HMM, die!\n");
    hmm->symbols = symbols;
    hmm->states = states;
    hmm->M = strlen(symbols);
@@ -290,10 +294,8 @@ alphaT(HMM * hmm, double * alpha_vec, char * obs, int T)
    double ** e_mat = hmm->e_mat;
    int i, j, k;
 
-   if (T <= 0) {
-      fprintf(stderr, "Nonpositive T, die!\n");
-      exit(-1);
-   }
+   if (T <= 0) 
+      HMM_fatal("Nonpositive T, die!\n");
    for (i  = 0; i < N; ++i)  
       alpha_vec[i] = log(init[i]) + log(e_mat[i][obs[0]]);
    if (T == 1) 
@@ -327,10 +329,8 @@ Palpha(HMM * hmm, char * obs, int T)
    double * alpha_vec;
 
    alpha_vec = (double *) calloc(hmm->N, sizeof(double));
-   if (alpha_vec == NULL) {
-      fprintf(stderr, "Can't allocate memory for alpha vector, die!\n");
-      exit(-1);
-   }
+   if (alpha_vec == NULL) 
+      HMM_fatal("Can't allocate memory for alpha vector, die!\n");
    alphaT(hmm, alpha_vec, obs, T);
    P = sumLogProbs(alpha_vec, hmm->N);
    free(alpha_vec);
@@ -354,10 +354,8 @@ beta1(HMM * hmm, double * beta_vec, char * obs, int T)
    double ** e_mat = hmm->e_mat;
    int i, j, k;
 
-   if (T <= 0) {
-      fprintf(stderr, "Nonpositive T, die!\n");
-      exit(-1);
-   }
+   if (T <= 0) 
+      HMM_fatal("Nonpositive T, die!\n");
    for (i  = 0; i < N; ++i)  
       beta_vec[i] = 0;
    if (T == 1) 
@@ -390,10 +388,8 @@ Pbeta(HMM * hmm, char * obs, int T)
    double * beta_vec;
 
    beta_vec = (double *) calloc(hmm->N, sizeof(double));
-   if (beta_vec == NULL) {
-      fprintf(stderr, "Can't allocate memory for beta vector, die!\n");
-      exit(-1);
-   }
+   if (beta_vec == NULL) 
+      HMM_fatal("Can't allocate memory for beta vector, die!\n");
    beta1(hmm, beta_vec, obs, T);
    for (i = 0; i < hmm->N; ++i) {
       P = sumLogProb(P, log(hmm->init[i]) + log(hmm->e_mat[i][obs[0]]) + beta_vec[i]);
@@ -493,28 +489,20 @@ baum_welch(HMM * hmm, char ** obs, int * T, int L)
    }
 
    alpha = (double **) malloc(hmm->N*sizeof(double *));
-   if (alpha == NULL) {
-      fprintf(stderr, "Can't allocate memory for alpha matrix!\n");
-      exit(-1);
-   }
+   if (alpha == NULL) 
+      HMM_fatal("Can't allocate memory for alpha matrix!\n");
    for (i = 0; i < N; ++i) {
       alpha[i] = (double *) malloc(maxL*sizeof(double)); 
-      if (alpha[i] == NULL) {
-         fprintf(stderr, "Can't allocate memory for rows of alpha matrix!\n");
-         exit(-1);
-      }
+      if (alpha[i] == NULL) 
+         HMM_fatal("Can't allocate memory for rows of alpha matrix!\n");
    }
    beta = (double **) malloc(hmm->N*sizeof(double *));
-   if (beta == NULL) {
-      fprintf(stderr, "Can't allocate memory for beta matrix!\n");
-      exit(-1);
-   }
+   if (beta == NULL) 
+      HMM_fatal("Can't allocate memory for beta matrix!\n");
    for (i = 0; i < N; ++i) {
       beta[i] = (double *) malloc(maxL*sizeof(double)); 
-      if (beta[i] == NULL) {
-         fprintf(stderr, "Can't allocate memory for rows of beta matrix!\n");
-         exit(-1);
-      }
+      if (beta[i] == NULL) 
+         HMM_fatal("Can't allocate memory for rows of beta matrix!\n");
    }
 
    do { /* do...while loop */
@@ -609,10 +597,8 @@ baum_welch(HMM * hmm, char ** obs, int * T, int L)
    }
       diff = newS - S;
 //printf("%g(%g)\t%g(%g)\t%g\n", newS, log(newS), S, log(S), diff);
-   if (diff < 0 && fabs(diff) >= LOWER_TOL) {
-      fprintf(stderr, "S should be monotonic increasing!\n");
-      exit(-1);
-   }
+      if (diff < 0 && fabs(diff) >= LOWER_TOL) 
+         HMM_fatal("S should be monotonic increasing!\n");
    }
    while (diff >= UPPER_TOL);
 
@@ -645,10 +631,8 @@ viterbi(HMM * hmm, char * hss, char * obs, int T)
    int phi_vec[T];
    int phi_mat[T][N];
 
-   if (T <= 0) {
-      fprintf(stderr, "Nonpositive T, die!\n");
-      exit(-1);
-   }
+   if (T <= 0) 
+      HMM_fatal("Nonpositive T, die!\n");
    for (i = 0; i < N; ++i) {
 //      delta_vec[i] = init[i]*e_mat[i][obs[0] - '1'];
 //      delta_vec[i] = i == 0 ? log(0.5) : -HUGE_VAL;
