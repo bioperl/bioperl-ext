@@ -3414,6 +3414,7 @@ DESTROY(obj)
         for (i = 0; i < obj->sz; ++i)
             free(obj->s[i]);
         free(obj->s);
+        free(obj);
 
 MODULE = Bio::Ext::Align PACKAGE = Bio::Ext::Align::SequenceProfile
 
@@ -3469,6 +3470,7 @@ DESTROY(obj)
         dpAlign_SequenceProfile * obj
         CODE:
         free(obj->waa);
+        free(obj);
 
 MODULE = Bio::Ext::Align PACKAGE = Bio::Ext::Align::AlignOutput
 
@@ -3534,4 +3536,5 @@ DESTROY(obj)
         CODE:
         free(obj->aln1);
         free(obj->aln2);
+        free(obj);
 
