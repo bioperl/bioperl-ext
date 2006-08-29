@@ -47,7 +47,7 @@ o Notes for Bio::Ext::Align
  this are
  
    Bio::Tools::pSW - makes Smith-Waterman alignments for DNA
-   Bio::Tolls::dpAlign - makes Smith-Waterman alignments for proteins
+   Bio::Tools::dpAlign - makes Smith-Waterman alignments for proteins
    Bio::SearchDist - deals with EVD fitting of extreme value
      distributions
  
@@ -63,7 +63,12 @@ o Notes for Bio::SeqIO::staden::read
  io_lib "read" library.  You should have this library installed prior
  to installing Bio::SeqIO::staden::read, it's currently available at:
  
-   ftp://ftp.mrc-lmb.cam.ac.uk/pub/staden/io_lib/
+ https://sourceforge.net/project/showfiles.php?group_id=100316
+ 
+ Currently, the Bio::SeqIO::staden::read extension only works with io_lib
+ v. 1.8.11 or 1.8.12; v. 1.9 and higher have several prototype changes in the
+ "read" library which have broken compatibility in those versions for now.
+ It is possible these changes may be addressed in the future.
  
  Many users have noted that the io_lib install process often forgets
  to install the "os.h" file along with the rest of the include files;
