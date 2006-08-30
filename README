@@ -94,3 +94,28 @@ o Notes for Bio::SeqIO::staden::read
  installation; make sure that all the required io_lib ".h" files are in
  place (see above regarding "os.h" and "config.h").
 
+ Additional problems may occur that have been associated with the VERSION
+ number that Inline::C uses.  Normally, this pops up as an Inline error:
+ 
+ ------------------------------------------------------------------------
+ The extension 'Bio::SeqIO::staden::read' is not properly installed in path:
+  '/usr/lib/perl5/site_perl/5.8.0'
+
+ If this is a CPAN/distributed module, you may need to reinstall it on your
+ system.
+
+ To allow Inline to compile the module in a temporary cache, simply remove the
+ Inline config option 'VERSION=' from the Bio::SeqIO::staden::read module.
+ ------------------------------------------------------------------------
+ 
+ To get around this, either quote out or remove the indicated line from your
+ local Bio/SeqIO/staden/read.pm file after installation:
+ 
+ use Inline (C => 'DATA',
+		    VERSION => '1.51', # <--- this line
+		    NAME => 'Bio::SeqIO::staden::read',
+		    LIBS => "-L/usr/local/lib -lread -lz", # leave these as double quotes - necessary for Makefile.PL function
+		    INC  => "-I/usr/local/include/io_lib", # leave these as double quotes - necessary for Makefile.PL function
+		   );
+           
+        
