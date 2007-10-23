@@ -149,10 +149,78 @@ void staden_read_trace(SV *self, FILE *fh, int format) {
   XSRETURN(4);
 }
 
+void staden_read_graph(SV *self, FILE *fh, int format)
+{
+      dXSARGS;
+
+      Read *read;
+
+      AV *aTrace, *cTrace, *gTrace, *tTrace;
+      SV *aVal, *cVal, *gVal, *tVal, *baseLoc;
+      SV *aRef, *cRef, *gRef, *tRef, *baseRef;
+      AV *baseLocs;
+
+      unsigned short points, location, counter;
+
+      aTrace = newAV();
+      cTrace = newAV();
+      gTrace = newAV();
+      tTrace = newAV();
+      baseLocs = newAV();
+
+      read = fread_reading(fh, (char *) NULL, format);
+
+      if (read == NULLRead)
+      {
+              sp = mark;
+                XPUSHs(&PL_sv_undef);
+                PUTBACK;
+              XSRETURN(1);
+      }
+
+      for (points = 0; points < read->NPoints; points++)
+      {
+              aVal = newSVuv(read->traceA[points]);
+              cVal = newSVuv(read->traceC[points]);
+              gVal = newSVuv(read->traceG[points]);
+              tVal = newSVuv(read->traceT[points]);
+              av_push(aTrace, aVal);
+              av_push(cTrace, cVal);
+              av_push(gTrace, gVal);
+              av_push(tTrace, tVal);
+      }
+
+      for (counter = 0; counter < read->NBases; counter++)
+      {
+              location = read->basePos[counter];
+              baseLoc = newSVuv(location);
+              av_push(baseLocs, baseLoc);
+      }
+
+      aRef = newRV_inc(aTrace);
+      cRef = newRV_inc(cTrace);
+      gRef = newRV_inc(gTrace);
+      tRef = newRV_inc(tTrace);
+      baseRef = newRV_inc(baseLocs);
+      
+      sp = mark;
+      XPUSHs(sv_2mortal(baseRef));
+      XPUSHs(sv_2mortal(aRef));
+      XPUSHs(sv_2mortal(cRef));
+      XPUSHs(sv_2mortal(gRef));
+      XPUSHs(sv_2mortal(tRef));
+      XPUSHs(sv_2mortal(newSViv(read->NPoints)));
+      XPUSHs(sv_2mortal(newSViv(read->maxTraceVal)));
+      PUTBACK;
+
+      read_deallocate(read);
+      XSRETURN(7);
+
+}
+
 MODULE = Bio::SeqIO::staden::read	PACKAGE = Bio::SeqIO::staden::read	
 
 PROTOTYPES: DISABLE
-
 
 int
 staden_write_trace (self, fh, format, seq, len, qual, id, desc)
@@ -175,6 +243,24 @@ staden_read_trace (self, fh, format)
 	PPCODE:
 	temp = PL_markstack_ptr++;
 	staden_read_trace(self, fh, format);
+	if (PL_markstack_ptr != temp) {
+          /* truly void, because dXSARGS not invoked */
+	  PL_markstack_ptr = temp;
+	  XSRETURN_EMPTY; /* return empty stack */
+        }
+        /* must have used dXSARGS; list context implied */
+	return; /* assume stack size is correct */
+
+void
+staden_read_graph (self, fh, format)
+	SV *	self
+	FILE *	fh
+	int	format
+	PREINIT:
+	I32* temp;
+	PPCODE:
+	temp = PL_markstack_ptr++;
+	staden_read_graph(self, fh, format);
 	if (PL_markstack_ptr != temp) {
           /* truly void, because dXSARGS not invoked */
 	  PL_markstack_ptr = temp;

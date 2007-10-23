@@ -61,38 +61,10 @@ DynaLoader::bootstrap Bio::SeqIO::staden::read $Bio::SeqIO::staden::read::VERSIO
 @Bio::SeqIO::staden::read::EXPORT_OK = ();
 
 sub dl_load_flags {0} # Prevent DynaLoader from complaining and croaking
-# --------- start mackey code ---------
-# - # package Bio::SeqIO::staden::read;
-
-# - # use strict;
-# - # use vars qw(@ISA $VERSION $HAS_INLINE);
 
 use Bio::Root::Root;
 use vars qw(@ISA);
 my @ISA = ( 'Bio::Root::Root', @ISA );
-
-# - # sub BEGIN {
-# - #     eval {
-# - # 	require Inline;
-# - # 
-# - # #       Debugging tools:
-# - # #	use Inline C => (Config =>
-# - # #			 CC => '/opt/parasoft/bin.linux2/insure',
-# - # #			 OPTIMIZE => '-g',
-# - # #			);
-# - # 
-# - # 	use Inline (C => 'DATA',
-# - # 		    VERSION => '1.51',
-# - # 		    NAME => 'Bio::SeqIO::staden::read',
-# - # 		    LIBS => "-L/usr/local/lib -lread -lz", # leave these as double quotes - necessary for Makefile.PL function
-# - # 		    INC  => "-I/usr/local/include/io_lib", # leave these as double quotes - necessary for Makefile.PL function
-# - # 		   );
-# - #     } or Bio::Root::Root::throw( -class => 'Bio::Root::SystemException',
-# - #				 -text  => "No Inline::C (or maybe io-lib?) support available",
-# - #			       );
-# - #}
-
-# $VERSION = 1.51;
 
 my %formats = ( scf => 1,
 		abi => 2,
@@ -127,6 +99,28 @@ sub read_trace {
 		    );
     }
 
+    return @data;
+}
+
+sub read_trace_with_graph
+{
+    my ($self) = shift;
+    my ($fh, $format) = @_;
+
+    unless (exists $formats{$format}) {
+        $self->throw( -class => 'Bio::Root::SystemException',
+                    -text  => "Format '$format' not supported by Staden read lib",
+                    -value => $format
+                    );
+    }
+    my @data = $self->staden_read_graph($fh, $formats{$format});
+
+    unless (@data) {
+      $self->throw( -class => 'Bio::Root::SystemException',
+                    -text  => "Format could not be read - are you sure this is a \"$format\"-formatted trace file?",
+                    -value => $format
+                    );
+    }
     return @data;
 }
 
