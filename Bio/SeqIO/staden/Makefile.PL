@@ -8,7 +8,7 @@ my $default_staden_location = '/usr/local/staden/io_lib';
 my %options = %{       
     {
         'NAME'     => 'Bio::SeqIO::staden::read',
-        'VERSION'  => '1.51'
+        'VERSION'  => '1.52'
     }
 };
 
