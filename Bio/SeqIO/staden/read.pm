@@ -166,4 +166,12 @@ sub write_trace {
     return $ret
 }
 
+sub get_trace_data {
+    my ($self) = shift;
+    if (@_) {
+        $self->{'get_trace_data'} = 1
+    }
+    $self->{'get_trace_data'} ? return 1 : return 0;
+}
+
 1;
