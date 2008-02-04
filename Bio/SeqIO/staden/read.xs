@@ -197,10 +197,10 @@ void staden_read_graph(SV *self, FILE *fh, int format)
               av_push(baseLocs, baseLoc);
       }
 
-      aRef = newRV_inc(aTrace);
-      cRef = newRV_inc(cTrace);
-      gRef = newRV_inc(gTrace);
-      tRef = newRV_inc(tTrace);
+      aRef = newRV_inc((SV *) aTrace);
+      cRef = newRV_inc((SV *) cTrace);
+      gRef = newRV_inc((SV *) gTrace);
+      tRef = newRV_inc((SV *) tTrace);
       baseRef = newRV_inc(baseLocs);
       
       sp = mark;
