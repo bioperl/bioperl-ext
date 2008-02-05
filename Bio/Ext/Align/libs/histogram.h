@@ -489,6 +489,29 @@ Histogram * bp_sw_Histogram_alloc(void);
 Histogram * bp_sw_free_Histogram(Histogram * obj);
 #define free_Histogram bp_sw_free_Histogram
 
+/* Function:  Mu(obj)
+ *
+ * Descrip:   Returns value of EVD_MU
+ *
+ * Arg:       None
+ *
+ * Return : float (current value of EVD_MU)
+ *
+ */
+float bp_sw_mu(Histogram * obj);
+#define Mu bp_sw_mu
+
+/* Function:  Lambda(obj)
+ *
+ * Descrip:   Returns value of EVD_LAMBDA
+ *
+ * Arg:       None
+ *
+ * Return : float (current value of EVD_LAMBDA)
+ *
+ */
+float bp_sw_lambda(Histogram * obj);
+#define Lambda bp_sw_lambda
 
   /* Unplaced functions */
   /* There has been no indication of the use of these functions */

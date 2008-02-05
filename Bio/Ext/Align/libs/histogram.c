@@ -21,15 +21,20 @@ double Evalue_from_Histogram(Histogram * his,double score)
 }
 
 /* Function:  new_Histogram(min,max,lumpsize)
- *
- * Descrip: No Description
- *
- * Arg:             min [UNKN ] minimum score (integer) [int]
- * Arg:             max [UNKN ] maximum score (integer) [int]
- * Arg:        lumpsize [UNKN ] when reallocating histogram, the reallocation amount [int]
+ * 
+ * Purpose:  Allocate and return a histogram structure.
+ *           min and max are your best guess. They need
+ *           not be absolutely correct; the histogram
+ *           will expand dynamically to accomodate scores
+ *           that exceed these suggested bounds. The amount
+ *           that the histogram grows by is set by "lumpsize".
+ * 
+ * Args:     min:      minimum score (integer)
+ *           max:      maximum score (integer)
+ *           lumpsize: when reallocating histogram, pad the reallocation
+ *                     by this much (saves excessive reallocation)
  *
  * Return [UNKN ]  Undocumented return value [Histogram *]
- *
  */
 # line 113 "histogram.dy"
 Histogram * new_Histogram(int min, int max, int lumpsize)
@@ -1558,7 +1563,34 @@ Histogram * free_Histogram(Histogram * obj)
     return NULL; 
 }    
 
+/* Function:  Mu(obj)
+ *
+ * Descrip:   Returns value of EVD_MU
+ *
+ * Arg:       None
+ *
+ * Return : float (current value of EVD_MU)
+ *
+ */
+float Mu(Histogram * obj)
+{
+   return obj->param[EVD_MU];
+}
 
+/* Function:  Lambda(obj)
+ *
+ * Descrip:   Returns value of EVD_LAMBDA
+ *
+ * Arg:       None
+ *
+ * Return : float (current value of EVD_LAMBDA)
+ *
+ */
+
+float Lambda(Histogram * obj)
+{
+   return obj->param[EVD_LAMBDA];
+}
 
 #ifdef _cplusplus
 }

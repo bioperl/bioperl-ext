@@ -1441,6 +1441,21 @@ DESTROY(obj)
 
 MODULE = Bio::Ext::Align PACKAGE = Bio::Ext::Align::Histogram
 
+float
+mu(his)
+	bp_sw_Histogram * his
+	CODE:
+	RETVAL = bp_sw_mu(his);
+	OUTPUT:
+	RETVAL
+
+float
+lambda(his)
+	bp_sw_Histogram * his
+	CODE:
+	RETVAL = bp_sw_lambda(his);
+	OUTPUT:
+	RETVAL
 
 double
 evalue(his,score)
@@ -1451,6 +1466,27 @@ evalue(his,score)
 	OUTPUT:
 	RETVAL
 
+double
+extreme_fit_e(his,mu,lambda,score)
+	bp_sw_Histogram * his
+    float mu
+    float lambda
+	double score
+	CODE:
+	RETVAL = bp_sw_ExtremeValueE(his,mu,lambda,score);
+	OUTPUT:
+	RETVAL
+
+double
+extreme_fit_p(his,mu,lambda,score)
+	bp_sw_Histogram * his
+    float mu
+    float lambda
+	double score
+	CODE:
+	RETVAL = bp_sw_ExtremeValueP(his,mu,lambda,score);
+	OUTPUT:
+	RETVAL
 
 void
 UnfitHistogram(h)
