@@ -5,7 +5,6 @@
 
 ## We start with some black magic to print on failure.
 my $DEBUG = $ENV{'BIOPERLDEBUG'} || 0;
-$DEBUG = 1;
 BEGIN {
     eval { require Test::More; };
     if ($@) {
