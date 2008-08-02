@@ -64,6 +64,16 @@ dpAlign_Local_DNA_MillerMyers(char * seq1, char * seq2, int match, int mismatch,
 	    dpAlign_fatal("Cannot allocate memory for scoring matrix col!\n");
         for (j = 0; j < 17; ++j) {
             if (i == 16 || j == 16) s[i][j] = mismatch; /* X mismatches all */
+            else if (i == 15 || j == 15) s[i][j] = match; /* N matches all but X */
+            else if (i == 14 && j != 0 || i != 0 && j == 14) s[i][j] = match; /* B is not A */
+            else if (i == 13 && j != 3 && j != 4 || i != 3 && i != 4 && j == 13) s[i][j] = match; /* V is not T/U */
+            else if (i == 12 && j != 2 || i != 2 && j == 12) s[i][j] = match; /* H is not G */
+            else if (i == 11 && j != 1 || i != 1 && j == 11) s[i][j] = match; /* D is not C */
+            else if (i == 10 && j != 0 && j != 1 && j != 7 || i != 0 && i != 1 && i != 7 && j == 10) s[i][j] = match; /* K is not A/C/M */
+            else if (i == 9 && j != 0 && j != 3 && j != 4 && j != 8 || i != 0 && i != 3 && i != 4 && i != 8 && j == 9) s[i][j] = match; /* S is not T/U/A/W */
+            else if (i == 8 && j != 1 && j != 2 && j != 9 || i != 1 && i != 2 && i != 9 && j == 10) s[i][j] = match; /* W is not G/C/S */
+            else if (i == 7 && j != 2 && j != 3 && j != 4 && j != 10 || i != 2 && i != 3 && i != 4 && i != 10 && j == 7) s[i][j] = match; /* M is not T/U/G/K */
+            else if (i == 3 && j == 4 || i == 4 && j == 3) s[i][j] = match; /* T matches U */ 
 	    else if (i == j) s[i][j] = match;
             else s[i][j] = mismatch;
         }
@@ -131,6 +141,16 @@ dpAlign_EndsFree_DNA_MillerMyers(char * seq1, char * seq2, int match, int mismat
 	    dpAlign_fatal("Cannot allocate memory for scoring matrix col!\n");
         for (j = 0; j < 17; ++j) {
             if (i == 16 || j == 16) s[i][j] = mismatch; /* X mismatches all */
+            else if (i == 15 || j == 15) s[i][j] = match; /* N matches all but X */
+            else if (i == 14 && j != 0 || i != 0 && j == 14) s[i][j] = match; /* B is not A */
+            else if (i == 13 && j != 3 && j != 4 || i != 3 && i != 4 && j == 13) s[i][j] = match; /* V is not T/U */
+            else if (i == 12 && j != 2 || i != 2 && j == 12) s[i][j] = match; /* H is not G */
+            else if (i == 11 && j != 1 || i != 1 && j == 11) s[i][j] = match; /* D is not C */
+            else if (i == 10 && j != 0 && j != 1 && j != 7 || i != 0 && i != 1 && i != 7 && j == 10) s[i][j] = match; /* K is not A/C/M */
+            else if (i == 9 && j != 0 && j != 3 && j != 4 && j != 8 || i != 0 && i != 3 && i != 4 && i != 8 && j == 9) s[i][j] = match; /* S is not T/U/A/W */
+            else if (i == 8 && j != 1 && j != 2 && j != 9 || i != 1 && i != 2 && i != 9 && j == 10) s[i][j] = match; /* W is not G/C/S */
+            else if (i == 7 && j != 2 && j != 3 && j != 4 && j != 10 || i != 2 && i != 3 && i != 4 && i != 10 && j == 7) s[i][j] = match; /* M is not T/U/G/K */
+            else if (i == 3 && j == 4 || i == 4 && j == 3) s[i][j] = match; /* T matches U */ 
 	    else if (i == j) s[i][j] = match;
             else s[i][j] = mismatch;
         }
@@ -194,6 +214,16 @@ dpAlign_Global_DNA_MillerMyers(char * seq1, char * seq2, int match, int mismatch
 	    dpAlign_fatal("Cannot allocate memory for scoring matrix col!\n");
         for (j = 0; j < 17; ++j) {
             if (i == 16 || j == 16) s[i][j] = mismatch; /* X mismatches all */
+            else if (i == 15 || j == 15) s[i][j] = match; /* N matches all but X */
+            else if (i == 14 && j != 0 || i != 0 && j == 14) s[i][j] = match; /* B is not A */
+            else if (i == 13 && j != 3 && j != 4 || i != 3 && i != 4 && j == 13) s[i][j] = match; /* V is not T/U */
+            else if (i == 12 && j != 2 || i != 2 && j == 12) s[i][j] = match; /* H is not G */
+            else if (i == 11 && j != 1 || i != 1 && j == 11) s[i][j] = match; /* D is not C */
+            else if (i == 10 && j != 0 && j != 1 && j != 7 || i != 0 && i != 1 && i != 7 && j == 10) s[i][j] = match; /* K is not A/C/M */
+            else if (i == 9 && j != 0 && j != 3 && j != 4 && j != 8 || i != 0 && i != 3 && i != 4 && i != 8 && j == 9) s[i][j] = match; /* S is not T/U/A/W */
+            else if (i == 8 && j != 1 && j != 2 && j != 9 || i != 1 && i != 2 && i != 9 && j == 10) s[i][j] = match; /* W is not G/C/S */
+            else if (i == 7 && j != 2 && j != 3 && j != 4 && j != 10 || i != 2 && i != 3 && i != 4 && i != 10 && j == 7) s[i][j] = match; /* M is not T/U/G/K */
+            else if (i == 3 && j == 4 || i == 4 && j == 3) s[i][j] = match; /* T matches U */ 
 	    else if (i == j) s[i][j] = match;
             else s[i][j] = mismatch;
         }
