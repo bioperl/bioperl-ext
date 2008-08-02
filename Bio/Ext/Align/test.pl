@@ -5,13 +5,14 @@
 
 ## We start with some black magic to print on failure.
 my $DEBUG = $ENV{'BIOPERLDEBUG'} || 0;
+$DEBUG = 1;
 BEGIN {
     eval { require Test::More; };
     if ($@) {
         die "Tests require Test::More";
     }
     use Test::More;
-    plan tests => 19;
+    plan tests => 20;
     use_ok('Bio::Ext::Align');
     use_ok('Bio::Tools::dpAlign');
     use_ok('Bio::Seq');
@@ -77,7 +78,7 @@ $s2 = Bio::Seq->new(-id => "two", -seq => "CAGCCTCGCTTAG", -alphabet => 'dna');
 $aln = $factory->pairwise_alignment($s1, $s2);
 $alnout->write_aln($aln) if $DEBUG;
 $factory->align_and_show($s1, $s2) if $DEBUG;
-
+warn(sprintf "Optimal Alignment Score = %d\n", $aln->score) if $DEBUG;
 ok(1);
 
 $s1 = Bio::Seq->new(-id => "one", -seq => "WLGQRNLVSSTGGNLLNVWLKDW", 
@@ -87,6 +88,7 @@ $s2 = Bio::Seq->new(-id => "two", -seq => "WMGNRNVVNLLNVWFRDW",
 $aln = $factory->pairwise_alignment($s1, $s2);
 $alnout->write_aln($aln) if $DEBUG;
 $factory->align_and_show($s1, $s2) if $DEBUG;
+warn(sprintf "Optimal Alignment Score = %d\n", $aln->score) if $DEBUG;
 ok(1);
 
 warn( "Testing Ends-Free Alignment case...\n") if $DEBUG;
@@ -97,6 +99,7 @@ $s2 = Bio::Seq->new(-id => "two", -seq => "CAGCCTCGCTTAG", -alphabet => 'dna');
 $aln = $factory->pairwise_alignment($s1, $s2);
 $alnout->write_aln($aln) if $DEBUG;
 $factory->align_and_show($s1, $s2) if $DEBUG;
+warn(sprintf "Optimal Alignment Score = %d\n", $aln->score) if $DEBUG;
 ok(1);
 
 $s1 = Bio::Seq->new(-id => "one", -seq => "WLGQRNLVSSTGGNLLNVWLKDW", 
@@ -106,6 +109,19 @@ $s2 = Bio::Seq->new(-id => "two", -seq => "NVVNLLNVWFRDWAVQPL",
 $aln = $factory->pairwise_alignment($s1, $s2);
 $alnout->write_aln($aln) if $DEBUG;
 $factory->align_and_show($s1, $s2) if $DEBUG;
+warn(sprintf "Optimal Alignment Score = %d\n", $aln->score) if $DEBUG;
+ok(1);
+
+warn( "Testing IUPAC DNA support...\n") if $DEBUG;
+
+$s1 = Bio::Seq->new(-id => "one", -seq => "WGRNVSSTGGNNVWKDW", 
+		   -alphabet => 'dna');
+$s2 = Bio::Seq->new(-id => "two", -seq => "NVVNNVWRDWAV", 
+		   -alphabet => 'dna');
+$aln = $factory->pairwise_alignment($s1, $s2);
+$alnout->write_aln($aln) if $DEBUG;
+$factory->align_and_show($s1, $s2) if $DEBUG;
+warn(sprintf "Optimal Alignment Score = %d\n", $aln->score) if $DEBUG;
 ok(1);
 
 warn( "Testing Profile Local Alignment Score case...\n") if $DEBUG;
