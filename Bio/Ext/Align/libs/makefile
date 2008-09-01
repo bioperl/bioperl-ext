@@ -46,5 +46,5 @@ libsw.a : $(OBJS)
 # For NetBSD or Sun (solaris) installs, add -fPIC to the CFLAGS lines
 #
 
-CFLAGS = -c -O
+CFLAGS = -c -O -fPIC
 CC     = cc
