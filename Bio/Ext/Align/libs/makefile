@@ -1,6 +1,3 @@
-
-
-
 OBJS =	aln.o\
 	alnconvert.o\
 	alnrange.o\

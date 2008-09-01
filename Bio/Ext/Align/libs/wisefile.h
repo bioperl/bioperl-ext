@@ -14,6 +14,7 @@ extern "C" {
 #ifdef NOERROR
 #define ERRORSTR "No error available"
 #else
+#include <errno.h>
 #define ERRORSTR strerror(errno)
 #endif
 
