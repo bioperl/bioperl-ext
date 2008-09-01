@@ -1353,12 +1353,11 @@ bp_sw_AlnRange * bp_sw_free_AlnRange( bp_sw_AlnRange * obj);
  *
  * bp_sw_change_max_BaseMatrix_kbytes
  * bp_sw_get_max_BaseMatrix_kbytes
- *
+ */
 
 
-
-/* These functions are not associated with an object */
-/* Function:  bp_sw_change_max_BaseMatrix_kbytes(new_kilo_number)
+/* These functions are not associated with an object 
+ * Function:  bp_sw_change_max_BaseMatrix_kbytes(new_kilo_number)
  *
  * Descrip:    This is to change, at run-time the maximum level of bytes basematrix *thinks*
  *             it can use. This number is *not* used for any actual calls to basematrix
@@ -1589,9 +1588,8 @@ bp_sw_cDNA * bp_sw_free_cDNA( bp_sw_cDNA * obj);
  * bp_sw_new_cDNADB_from_single_seq
  * bp_sw_new_cDNADB
  *
-
-/* API for object cDNADB */
-/* Function:  bp_sw_get_cDNA_from_cDNADB(cdnadb,de)
+ * API for object cDNADB
+ * Function:  bp_sw_get_cDNA_from_cDNADB(cdnadb,de)
  *
  * Descrip:    Gets cDNA sequence out from
  *             the cDNADB using the information stored in
@@ -1895,10 +1893,10 @@ bp_sw_cDNADB * bp_sw_new_cDNADB( bp_sw_SequenceDB * seqdb);
  * bp_sw_base_from_char
  * bp_sw_char_complement_base
  * bp_sw_complement_base
- *
+ */
 
-/* API for object CodonTable */
-/* Function:  bp_sw_read_CodonTable_file(file)
+/* API for object CodonTable 
+ * Function:  bp_sw_read_CodonTable_file(file)
  *
  * Descrip:    Opens filename, reads it as if a Ewan style
  *             codon table and closes.
@@ -2241,7 +2239,7 @@ base bp_sw_complement_base( base b);
 /* Helper functions in the module
  *
  * bp_sw_flat_CodonMapper
- *
+ */
 
 /* API for object CodonMapper */
 /* Function:  bp_sw_sprinkle_errors_over_CodonMapper(cm,error)
@@ -3328,7 +3326,7 @@ bp_sw_Genomic * bp_sw_free_Genomic( bp_sw_Genomic * obj);
  *
  * bp_sw_new_GenomicDB_from_single_seq
  * bp_sw_new_GenomicDB
- *
+ */
 
 /* API for object GenomicDB */
 /* Function:  bp_sw_get_Genomic_from_GenomicDB(gendb,de)
@@ -3848,7 +3846,7 @@ bp_sw_GenomicRegion * bp_sw_free_GenomicRegion( bp_sw_GenomicRegion * obj);
 /* Helper functions in the module
  *
  * bp_sw_new_Histogram
- *
+ */
 
 /* API for object Histogram */
 /* Function:  bp_sw_UnfitHistogram(h)
@@ -4813,7 +4811,7 @@ bp_sw_PackAlnUnit * bp_sw_free_PackAlnUnit( bp_sw_PackAlnUnit * obj);
  * bp_sw_Score2Probability
  * bp_sw_Score2Bits
  * bp_sw_halfbit2Probability
- *
+ */
 
 
 
@@ -5022,7 +5020,7 @@ bp_sw_Protein * bp_sw_free_Protein( bp_sw_Protein * obj);
  * bp_sw_new_ProteinDB_from_single_seq
  * bp_sw_single_fasta_ProteinDB
  * bp_sw_new_ProteinDB
- *
+ */
 
 /* API for object ProteinDB */
 /* Function:  bp_sw_hard_link_ProteinDB(obj)
@@ -5220,8 +5218,7 @@ bp_sw_ProteinDB * bp_sw_new_ProteinDB( bp_sw_SequenceDB * seqdb,bp_sw_ComplexSeq
  * bp_sw_write_pretty_str_align
  * bp_sw_write_pretty_seq_align
  * bp_sw_write_pretty_Protein_align
- *
-
+ */
 
 
 /* These functions are not associated with an object */
@@ -5326,7 +5323,7 @@ boolean bp_sw_write_pretty_Protein_align( bp_sw_AlnBlock * alb,bp_sw_Protein * q
  *
  * bp_sw_Sequence_type_to_string
  * bp_sw_new_Sequence_from_strings
- *
+ */
 
 /* API for object Sequence */
 /* Function:  bp_sw_uppercase_Sequence(seq)
@@ -6301,9 +6298,7 @@ bp_sw_FileSource * bp_sw_free_FileSource( bp_sw_FileSource * obj);
  * bp_sw_Align_strings_ProteinSmithWaterman
  * bp_sw_Align_Sequences_ProteinSmithWaterman
  * bp_sw_Align_Proteins_SmithWaterman
- *
-
-
+ */
 
 /* These functions are not associated with an object */
 /* Function:  bp_sw_Align_strings_ProteinSmithWaterman(one,two,comp,gap,ext)
