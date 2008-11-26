@@ -300,6 +300,7 @@ pgreen(int * waa, int M, unsigned char * B, int N, int gap, int ext, struct swst
     next_row:
 	;
     }
-
+	
+	free(waa);
     return score;
 }

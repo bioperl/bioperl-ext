@@ -48,3 +48,6 @@ libsw.a : $(OBJS)
 
 CFLAGS = -c -O -fPIC
 CC     = cc
+
+clean:
+	rm -f $(OBJS)
