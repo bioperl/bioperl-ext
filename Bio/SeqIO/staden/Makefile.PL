@@ -8,7 +8,7 @@ my $default_staden_location = '/usr/local/staden/io_lib';
 my %options = %{       
     {
         'NAME'     => 'Bio::SeqIO::staden::read',
-        'VERSION'  => '1.52'
+        'VERSION'  => '1.007000'
     }
 };
 
@@ -17,7 +17,7 @@ my ($staden_libs_opts, $staden_include_opts );
 #
 # see if io_lib-config from staden is on the path.
 #  
-# 
+
 print "Let's see if io_lib-config is on your path\n";
 system("io_lib-config --version");
 

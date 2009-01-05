@@ -53,7 +53,7 @@ require Exporter;
 *import = \&Exporter::import;
 require DynaLoader;
 
-$Bio::SeqIO::staden::read::VERSION = '1.52';
+$Bio::SeqIO::staden::read::VERSION = '1.007000';
 
 DynaLoader::bootstrap Bio::SeqIO::staden::read $Bio::SeqIO::staden::read::VERSION;
 
