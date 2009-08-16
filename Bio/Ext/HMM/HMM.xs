@@ -19,7 +19,7 @@ HMM_statistical_training(class, hmm, obs, hs)
         HMM * hmm
         SV * obs
         SV * hs
-        PPCODE:
+        CODE:
         AV * obs_av = (AV *) SvRV(obs);
         AV * hs_av = (AV *) SvRV(hs);
         int i;
@@ -105,7 +105,7 @@ HMM_viterbi(class, hmm, seq)
         PPCODE:
         SV * sv;
         int T = strlen(seq);
-        char * hss = (char *) malloc(T*sizeof(char));
+        char * hss = (char *) malloc((T+1)*sizeof(char));
         char obs[T+1];
         if (hss == NULL)
            croak("Can't allocate memory for hidden state sequence!\n");
@@ -124,12 +124,10 @@ new(class, symbols, states)
         char * class
         char * symbols
         char * states
-        PPCODE:
-        HMM * out;
-        out = HMM_new(symbols, states);
-        ST(0) = sv_newmortal();
-        sv_setref_pv(ST(0), class, (void *) out);
-        XSRETURN(1);
+        CODE:
+        RETVAL = HMM_new(symbols, states);
+        OUTPUT:
+        RETVAL
 
 double
 get_init_entry(class, hmm, state)
