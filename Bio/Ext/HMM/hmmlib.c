@@ -597,7 +597,7 @@ baum_welch(HMM * hmm, char ** obs, int * T, int L)
    }
       diff = newS - S;
 //printf("%g(%g)\t%g(%g)\t%g\n", newS, log(newS), S, log(S), diff);
-      if (diff < 0 && fabs(diff) >= LOWER_TOL) 
+      if (diff < 0 && fabs(diff) >= UPPER_TOL) 
          HMM_fatal("S should be monotonic increasing!\n");
    }
    while (diff >= UPPER_TOL);
