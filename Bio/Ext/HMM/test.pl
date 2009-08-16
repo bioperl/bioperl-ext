@@ -97,6 +97,6 @@ foreach $r ($matrix->row_names) {
    printf "\n";
 }
 
-printf "Vitebi Algorithm:\n";
+printf "Viterbi Algorithm:\n";
 $obs3 = $hmm->viterbi($seq1);
 printf "%s\n", $obs3;
